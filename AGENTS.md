@@ -100,3 +100,28 @@ Blank scaffold has no host-specific adapter yet. TanStack Start deploys via Vite
 3. Load matching Intent skills before Start/Router/Devtools changes
 4. When deploying, load the deployment skill and add the appropriate Nitro/host preset
 5. Add `.env` / typed env declarations only when real config is introduced
+
+
+cd ~/projects/PREIShare-org-repo
+cat >> AGENTS.md << 'EOF'
+
+## Onboarding & agent rules
+
+- Full agent rules: [.cursor/rules/preishare.mdc](.cursor/rules/preishare.mdc)
+- Repo inventory: [docs/onboarding/repo-map.md](docs/onboarding/repo-map.md)
+- Setup log: [docs/onboarding/setup-log.md](docs/onboarding/setup-log.md)
+
+### Safety boundaries
+- Never commit `.env` files or secret values (`.env` is gitignored — keep it that way)
+- Never hand-edit files produced by `tsr generate` / route generation
+- Never delete or refactor a file without confirming nothing else imports it
+- Never push directly to `upstream` — only to your own fork (`origin`)
+- Ask before deleting any file
+
+### Agent workflow
+1. Run `npx @tanstack/intent@latest list` before substantial changes and load a matching skill
+2. Plan the smallest change that satisfies the task
+3. Ground every claim in `docs/onboarding/repo-map.md` — say "not found" instead of guessing
+4. Make the diff
+5. Verify (re-run relevant script, e.g. `npm run dev` or `npm run generate-routes`)
+EOF
