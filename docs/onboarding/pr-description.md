@@ -1,6 +1,6 @@
 # Pull request description — first PREIshare contribution
 
-**PR URL:** https://github.com/ashphill/PREIShare-org-repo/tree/docs/first-contribution-ashphill
+**PR URL:** https://github.com/EdTechForLearning/PREIShare-org-repo/pull/11
 **Base repository:** EdTechForLearning/PREIShare-org-repo
 **Base branch:** main
 **Head repository (my fork):** ashphill/PREIShare-org-repo
