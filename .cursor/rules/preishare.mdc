@@ -12,9 +12,10 @@ Built from the TanStack CLI blank React Start scaffold.
 
 ## Stack (verified from package.json and AGENTS.md)
 - TypeScript, React 19, TanStack Start / TanStack Router (file-based routes in `src/routes/`)
-- Tailwind CSS v4, Vite 8
+- Tailwind CSS v4, Vite (dev/build/preview)
 - Routes are generated via `tsr generate` — do not hand-edit generated route files
-- No database, auth, or partner integrations exist in this app (confirmed blank scaffold)
+- Supabase / PostgreSQL / pgvector: **not confirmed in package.json as of this writing.**
+  If you find real usage in `src/`, update this file and repo-map.md before relying on it.
 
 ## Preferred edit surfaces for newcomers
 - `docs/onboarding/` — docs-only, low risk
