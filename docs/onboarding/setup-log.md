@@ -1,5 +1,3 @@
-mkdir -p docs/onboarding
-cat > docs/onboarding/setup-log.md << 'EOF'
 # PREIshare setup log
 
 **Learner:** Ashton Phillips
