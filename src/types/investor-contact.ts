@@ -4,15 +4,15 @@ export interface InvestorContact {
     /** Stable id within the listing's contact list. */
     id: string;
   
-    /** Person or firm name. */
-    name: string;
+    /** Full name of the person or firm. */
+    fullName: string;
   
-    /** Why this contact appears on the listing, e.g. "broker", "owner_rep". */
+    /** Role relative to the deal, e.g. "broker", "owner", "assistant". */
     role: string;
   
-    /** Email address, if used. At least one of email or phone is required. */
-    email?: string;
+    /** Email address for this contact. */
+    email: string;
   
-    /** Phone number, if used. At least one of email or phone is required. */
+    /** Optional — not every contact shares a phone. */
     phone?: string;
   }
