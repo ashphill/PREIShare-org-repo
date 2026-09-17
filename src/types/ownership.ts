@@ -1,19 +1,12 @@
 // src/types/ownership.ts
-/** Closed set of relationships a contact can have to the property. */
-export type OwnershipRelationship =
-  | "primary_owner"
-  | "co_owner"
-  | "broker"
-  | "property_manager";
-
-/** How a specific contact relates to the asset. */
+/** Who owns the property and how ownership is described for PREIshare. */
 export interface Ownership {
-  /** Which contact this ownership row refers to (matches an InvestorContact.id). */
-  contactId: string;
-
-  /** Relationship of the contact to the asset — must be an approved value. */
-  relationship: OwnershipRelationship;
-
-  /** Optional ownership share, as a percentage. */
-  sharePercent?: number;
-}
+    /** Person or entity name shown on the listing. */
+    ownerName: string;
+  
+    /** Optional free-text about splits, trusts, or co-owners. */
+    notes?: string;
+  
+    /** When known, percent owned by this owner (0–100). */
+    ownershipPercent?: number;
+  }
