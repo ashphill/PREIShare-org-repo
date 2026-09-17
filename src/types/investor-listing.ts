@@ -1,6 +1,6 @@
 /**
  * Core PREIshare investor listing.
- * Composes Address, FinancialSummary, InvestorContact[], and Ownership[];
+ * Composes Address, FinancialSummary, InvestorContact[], and Ownership;
  * unions for status and property type.
  */
 import type { ListingStatus } from "./listing-status";
@@ -51,6 +51,6 @@ export interface InvestorListing {
    */
   primaryContactId: string;
 
-  /** Ownership relationships tied to contacts in `contacts`. */
-  ownership: Ownership[];
+  /** Ownership description for the property. */
+  ownership: Ownership;
 }
