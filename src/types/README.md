@@ -30,3 +30,20 @@ typed data so the team can trust shared listing models.
 Business vocabulary and field rules come from:
 `docs/domain/investor-listing-domain-brief.md`
 (and the field inventory from `docs/domain/listing-field-inventory.md`).
+
+
+
+   ## Typecheck
+
+   From the project root, run:
+
+```bash
+   npm run typecheck
+```
+
+   What success looks like: the command finishes with no type errors (exit code 0).
+
+   Notes for beginners:
+   - `tsc --noEmit` means "check types only; do not write compiled JavaScript files."
+   - Valid sources include `src/types/**` and `src/fixtures/sample-investor-listings.ts`.
+   - Intentional bad examples live in `src/fixtures/invalid-listings.errors.ts` and are documented in `docs/type-safety/expected-type-errors.md`. They are excluded from the `typecheck` gate on purpose — run `npm run typecheck:errors` if you want to confirm those intentional errors still fire correctly.
