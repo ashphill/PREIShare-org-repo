@@ -3,6 +3,10 @@
  * Nested types (address, financials, contacts) and unions
  * (status, property type) are added in later steps.
  */
+
+import type { ListingStatus } from "./listing-status.ts";
+import type { PropertyType } from "./property-type.ts";
+
 export interface InvestorListing {
     /** Stable unique id for this listing (assigned by the system). */
     id: string;
@@ -24,4 +28,10 @@ export interface InvestorListing {
   
     /** ISO-8601 datetime string when the listing was last updated. */
     updatedAt: string;
+  
+    /** Lifecycle state of the listing — must be one of the approved values. */
+    status: ListingStatus;
+  
+    /** Property classification — must be one of the approved values. */
+    propertyType: PropertyType;
   }
