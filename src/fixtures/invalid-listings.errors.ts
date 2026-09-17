@@ -33,11 +33,7 @@ export const invalidStatusSpelling: InvestorListing = {
 };
 
 // Case: required nested address field missing
-// NOTE: this is the one documented teaching exception where `as InvestorListing`
-// is used — without it, TypeScript would report the error on the whole object's
-// shape rather than pinpointing the missing `city` field the way this fixture
-// is meant to demonstrate. This is intentional and should not be "fixed."
-export const missingAddressCity = {
+export const missingAddressCity: InvestorListing = {
   id: "listing-missing-city",
   title: "Lakeview fourplex",
   summary: "Four-unit multifamily property on the lake.",
@@ -47,7 +43,7 @@ export const missingAddressCity = {
   propertyType: "multifamily",
   address: {
     line1: "22 Lake Rd",
-    // city missing on purpose
+    // city missing on purpose — should error: required property missing
     region: "TX",
     postalCode: "78702",
     country: "US"
@@ -57,7 +53,7 @@ export const missingAddressCity = {
   ],
   primaryContactId: "c2",
   ownership: { ownerName: "Lee Capital", ownershipPercent: 100 }
-} as InvestorListing;
+};
 
 // Case: numeric money field given as a string
 export const priceAsString: InvestorListing = {
@@ -115,7 +111,7 @@ export const emptyContactsOnPublished: InvestorListing = {
 };
 
 // Case: sold status missing required closedAt
-export const soldWithoutClosedAt = {
+export const soldWithoutClosedAt: InvestorListing = {
   id: "listing-sold-no-closed-at",
   title: "Bell Tower Retail — Sold",
   summary: "Retail center sold to a private investor.",
@@ -140,4 +136,4 @@ export const soldWithoutClosedAt = {
   ],
   primaryContactId: "c4",
   ownership: { ownerName: "Bell Tower Holdings" }
-} as InvestorListing;
+};
