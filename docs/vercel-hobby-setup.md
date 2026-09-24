@@ -9,7 +9,7 @@
 | --- | --- |
 | GitHub repository (you can push) | `https://github.com/ashphill/PREIShare-org-repo` |
 | Instructor collaborator | `thortek` added: TODO — confirm under Settings → Collaborators |
-| Vercel Production URL | `https://preishare-org-repo-vercel.vercel.app` |
+| Vercel Production URL | `https://prei-share-org-repo-one.vercel.app` |
 | Preview URLs | Do **not** submit these to Canvas |
 
 ## Hobby constraints I will keep
@@ -21,5 +21,5 @@
 
 ## First production deploy
 
-- Status: Ready (Vercel shows "Ready" in the dashboard, but the Production URL currently returns 404 NOT_FOUND — actively debugging Nitro/build config)
-- Incognito check of Production URL: fail — still returns 404 as of this writing
+- Status: Ready — deployment source shows commit a8aea8f on main, real TanStack Start app renders correctly
+- Incognito check of Production URL: pass — loads the real app, no 404

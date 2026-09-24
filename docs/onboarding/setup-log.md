@@ -1,5 +1,3 @@
-mkdir -p docs/onboarding
-cat > docs/onboarding/setup-log.md << 'EOF'
 # PREIshare setup log
 
 **Learner:** Ashton Phillips
@@ -19,22 +17,12 @@ cat > docs/onboarding/setup-log.md << 'EOF'
 ## 2. Git install and identity
 
 ```text
-<<<<<<< HEAD
-$ git --version
-git version 2.50.1 (Apple Git-155)
-
-$ git config --global user.name
-ashphill
-
-$ git config --global user.email
-=======
 # paste output of: git --version
 git version 2.50.1 (Apple Git-155)
 
 # paste output of: git config --global user.name
 ashphill
 # paste output of: git config --global user.email
->>>>>>> 3df5c75d3d11bb7fa57882a44f3f3ea386882fd4
 asp9soccer@gmail.com
 ```
 
@@ -78,11 +66,7 @@ nothing to commit, working tree clean
 ### Default branch
 
 ```text
-<<<<<<< HEAD
-$ git branch --show-current
-=======
 # paste output of: git branch --show-current
->>>>>>> 3df5c75d3d11bb7fa57882a44f3f3ea386882fd4
 main
 ```
 
@@ -105,7 +89,4 @@ Working tree clean after clone: PASS
 ## 8. Ready for next step
 
 I have a fork I own, a local clone of it with origin and upstream set, and a setup log another teammate could audit: YES
-<<<<<<< HEAD
-=======
 EOF
->>>>>>> 3df5c75d3d11bb7fa57882a44f3f3ea386882fd4
