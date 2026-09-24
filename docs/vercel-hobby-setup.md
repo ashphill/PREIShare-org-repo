@@ -1,5 +1,3 @@
-cd ~/projects/PREIShare-org-repo
-cat > docs/vercel-hobby-setup.md << 'EOF'
 # Vercel Hobby setup — PREIshare investor app
 
 **Date:** 2026-09-09
@@ -25,4 +23,3 @@ cat > docs/vercel-hobby-setup.md << 'EOF'
 
 - Status: Ready — deployment source shows commit a8aea8f on main, real TanStack Start app renders correctly
 - Incognito check of Production URL: pass — loads the real app, no 404
-EOF
