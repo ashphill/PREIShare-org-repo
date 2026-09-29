@@ -31,7 +31,7 @@ Mock data should use existing types from `src/types/index.ts` where a matching t
 | `ProfileCard` | Mock investor name and contact placeholders | Profile page | Offer password change, sign-out, or any auth action |
 
 ## Composition rules
-1. One job per component. If two rows describe the same job, merge or delete one.
+1. One job per component. If two rows describe the same job, please merge or delete one.
 2. Nav labels and paths live only in `navConfig`.
 3. Layout components wrap pages; page widgets never rebuild the shell.
 4. Every mock value on screen is visibly labeled as mock.
