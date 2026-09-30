@@ -1,4 +1,4 @@
-investor-dashboard-brief.md# PREIshare Investor Dashboard — Client Brief (Sprint 3 Shell)
+# PREIshare Investor Dashboard — Client Brief (Sprint 3 Shell)
 
 ## Product summary
 PREIshare turns raw property and market data into insights investors can act on.
