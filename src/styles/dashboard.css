@@ -1,0 +1,162 @@
+/* src/styles/dashboard.css
+   Shared responsive + accessibility polish for the PREIshare investor shell.
+   Loaded through src/styles.css (the app's global stylesheet).
+   Breakpoints: below 768px the sidebar collapses behind a header menu button;
+   card grids go 1 column -> 2 columns (640px) -> 3 columns (1024px).
+*/
+
+:root {
+  --dash-sidebar-width: 14rem;
+  --dash-gap: 1rem;
+  --dash-radius: 0.75rem;
+  --dash-focus: var(--lagoon-deep, #1d4ed8);
+  --dash-touch-min: 44px;
+}
+
+/* Shell: sidebar beside content on wide screens */
+.dash-shell {
+  display: flex;
+  min-height: 70vh;
+  width: 100%;
+}
+
+.dash-sidebar {
+  width: var(--dash-sidebar-width);
+  flex-shrink: 0;
+  padding: 1rem;
+  border-right: 1px solid var(--line);
+}
+
+.dash-main {
+  flex: 1;
+  min-width: 0; /* stops wide tables from stretching the flex row */
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-header {
+  min-height: 3.5rem;
+  display: flex;
+  align-items: center;
+  gap: var(--dash-gap);
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.dash-content {
+  flex: 1;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--dash-gap);
+}
+
+/* Mobile menu toggle: hidden on wide screens */
+.dash-menu-toggle {
+  display: none;
+  border: 1px solid var(--line);
+  border-radius: var(--dash-radius);
+  background: transparent;
+  cursor: pointer;
+}
+
+/* Card grids: 1 col mobile -> 2 -> 3 */
+.dash-card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--dash-gap);
+}
+
+@media (min-width: 640px) {
+  .dash-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .dash-card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Tables: scroll inside the card instead of overflowing the page */
+.dash-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Touch-friendly targets */
+.dash-nav a,
+.dash-nav button,
+.dash-header button {
+  min-height: var(--dash-touch-min);
+  min-width: var(--dash-touch-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.dash-nav a {
+  width: 100%;
+}
+
+.dash-menu-toggle {
+  justify-content: center;
+}
+
+/* Visible keyboard focus. Never remove outlines without a replacement. */
+.dash-nav a:focus-visible,
+.dash-nav button:focus-visible,
+.dash-header a:focus-visible,
+.dash-header button:focus-visible,
+.dash-content a:focus-visible,
+.dash-content button:focus-visible {
+  outline: 2px solid var(--dash-focus);
+  outline-offset: 2px;
+}
+
+/* Narrow screens: stack the shell and collapse the sidebar behind the toggle */
+@media (max-width: 767px) {
+  .dash-shell {
+    flex-direction: column;
+  }
+
+  .dash-main {
+    order: -1; /* header with the menu button comes first */
+  }
+
+  .dash-menu-toggle {
+    display: inline-flex;
+  }
+
+  .dash-sidebar {
+    width: 100%;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    display: none;
+  }
+
+  .dash-shell.nav-open .dash-sidebar {
+    display: block;
+    order: -1;
+  }
+
+  .dash-shell.nav-open .dash-main {
+    order: 0;
+  }
+
+  .dash-header,
+  .dash-content {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dash-shell * {
+    transition: none !important;
+  }
+}
