@@ -8,8 +8,8 @@ export function NavItems() {
   })
 
   return (
-    <nav className="sidebar-nav" aria-label="Dashboard">
-      <ul className="nav-list flex flex-wrap gap-2 sm:flex-col">
+    <nav className="dash-nav sidebar-nav" aria-label="Dashboard">
+      <ul className="nav-list flex flex-col gap-1">
         {dashboardNavItems.map((item) => {
           const isActive = isNavItemActive(item, pathname)
 
@@ -19,8 +19,8 @@ export function NavItems() {
                 to={item.path}
                 className={
                   isActive
-                    ? 'nav-link nav-link-active block rounded-md bg-[rgba(79,184,178,0.18)] px-3 py-1.5 font-semibold no-underline'
-                    : 'nav-link block rounded-md px-3 py-1.5 no-underline'
+                    ? 'nav-link nav-link-active rounded-md bg-[rgba(79,184,178,0.18)] px-3 py-1.5 font-semibold no-underline'
+                    : 'nav-link rounded-md px-3 py-1.5 no-underline'
                 }
                 aria-current={isActive ? 'page' : undefined}
               >
