@@ -9,7 +9,11 @@ type HeaderProps = {
   children?: ReactNode
 }
 
-/** Top bar: mobile menu toggle, page title from navConfig, optional actions slot. */
+/**
+ * Top bar: mobile menu toggle, page title from navConfig, optional actions slot.
+ * Below 768px the .dash-menu-toggle button (styled in src/styles/dashboard.css)
+ * opens and closes the sidebar; aria-expanded and aria-controls describe that state.
+ */
 export function Header({ navOpen, sidebarId, onToggleNav, children }: HeaderProps) {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
