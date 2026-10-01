@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { DealsList } from '../../components/dashboard/DealsList'
 
 export const Route = createFileRoute('/dashboard/deals')({
   component: DealsPage,
@@ -6,9 +7,8 @@ export const Route = createFileRoute('/dashboard/deals')({
 
 function DealsPage() {
   return (
-    <main>
-      <h1>Deals</h1>
-      <p>Placeholder for open and past investment deals.</p>
-    </main>
+    <section className="dashboard-page" aria-label="Open deals">
+      <DealsList />
+    </section>
   )
 }
