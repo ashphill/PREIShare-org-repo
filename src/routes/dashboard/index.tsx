@@ -7,7 +7,10 @@ export const Route = createFileRoute('/dashboard/')({
   component: DashboardHomePage,
 })
 
-/** Dashboard home: composes the widgets. All figures are sample placeholders. */
+/**
+ * Dashboard home at exactly /dashboard. Renders inside the layout's <Outlet />
+ * in dashboard/route.tsx, so it never redraws the shell. All figures are sample placeholders.
+ */
 function DashboardHomePage() {
   return (
     <section className="dashboard-home space-y-6" aria-label="Home overview">
