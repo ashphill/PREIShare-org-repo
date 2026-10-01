@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { PortfolioTable } from '../../components/dashboard/PortfolioTable'
 
 export const Route = createFileRoute('/dashboard/portfolio')({
   component: PortfolioPage,
@@ -6,9 +7,8 @@ export const Route = createFileRoute('/dashboard/portfolio')({
 
 function PortfolioPage() {
   return (
-    <main>
-      <h1>Portfolio</h1>
-      <p>Placeholder for holdings and performance.</p>
-    </main>
+    <section className="dashboard-page" aria-label="Your portfolio">
+      <PortfolioTable />
+    </section>
   )
 }
