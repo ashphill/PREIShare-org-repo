@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { NavItems } from './NavItems'
 
 type SidebarProps = {
   brandLabel?: string
@@ -13,16 +14,9 @@ export function Sidebar({ brandLabel = 'PREIshare', children }: SidebarProps) {
       aria-label="Investor navigation"
     >
       <div className="sidebar-brand mb-4 text-lg font-bold">{brandLabel}</div>
-      <nav className="sidebar-nav">
-        {/* Placeholder links. Full nav config and active states come in the next step. */}
-        <ul className="flex flex-wrap gap-3 sm:flex-col sm:gap-2">
-          <li><a href="/dashboard">Home</a></li>
-          <li><a href="/dashboard/portfolio">Portfolio</a></li>
-          <li><a href="/dashboard/deals">Deals</a></li>
-          <li><a href="/dashboard/profile">Profile</a></li>
-        </ul>
-        {children}
-      </nav>
+      {/* Links, labels, and active state all come from navConfig */}
+      <NavItems />
+      {children}
     </aside>
   )
 }
