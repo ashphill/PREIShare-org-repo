@@ -3,6 +3,15 @@
    Loaded through src/styles.css (the app's global stylesheet).
    Breakpoints: below 768px the sidebar collapses behind a header menu button;
    card grids go 1 column -> 2 columns (640px) -> 3 columns (1024px).
+
+   Where these classes are applied:
+   - src/styles.css imports this file (@import "./styles/dashboard.css")
+   - AppShell.tsx: .dash-shell (+ .nav-open), .dash-main, <main class="dash-content" id="main-content">
+   - Sidebar.tsx: <aside id="dashboard-sidebar" class="dash-sidebar" aria-label="Investor navigation">
+   - NavItems.tsx: <nav class="dash-nav" aria-label="Dashboard"> with aria-current on the active link
+   - Header.tsx: .dash-header with a .dash-menu-toggle button (aria-label, aria-expanded,
+     aria-controls="dashboard-sidebar"); the icon span is aria-hidden
+   - dashboard/index.tsx: .dash-card-grid; PortfolioTable.tsx: .dash-table-wrap
 */
 
 :root {
