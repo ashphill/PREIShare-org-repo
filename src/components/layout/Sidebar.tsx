@@ -7,7 +7,11 @@ type SidebarProps = {
   children?: ReactNode
 }
 
-/** Left navigation chrome for the investor dashboard shell. */
+/**
+ * Left navigation chrome for the investor dashboard shell.
+ * .dash-sidebar (src/styles/dashboard.css) collapses it below 768px; the Header
+ * menu button targets this element by id through aria-controls.
+ */
 export function Sidebar({ id, brandLabel = 'PREIshare', children }: SidebarProps) {
   return (
     <aside id={id} className="dash-sidebar dashboard-sidebar" aria-label="Investor navigation">
