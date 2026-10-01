@@ -15,7 +15,7 @@ function DashboardHomePage() {
         Demo shell — all figures below are sample placeholders, not live balances.
       </p>
 
-      <div className="dashboard-home__stats grid gap-4 sm:grid-cols-3">
+      <div className="dashboard-home__stats dash-card-grid">
         <StatsCard label="Total portfolio value" value="$300,000" hint="Sample total" />
         <StatsCard label="Holdings" value="3" hint="Sample count" />
         <StatsCard label="Open deals" value="4" hint="Sample count" />
