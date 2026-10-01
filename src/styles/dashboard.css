@@ -1,16 +1,17 @@
 /* src/styles/dashboard.css
    Shared responsive + accessibility polish for the PREIshare investor shell.
    Imported by src/styles.css right after Tailwind, so it loads on every page.
-   Breakpoints: below 768px the sidebar collapses behind a header menu button;
+   Breakpoints: below 768px the Sidebar hides and MobileNav (menu button + panel) shows;
    card grids go 1 column -> 2 columns (640px) -> 3 columns (1024px).
 
    Where these classes are applied:
    - src/styles.css imports this file (@import "./styles/dashboard.css")
-   - AppShell.tsx: .dash-shell (+ .nav-open), .dash-main, <main class="dash-content" id="main-content">
-   - Sidebar.tsx: <aside id="dashboard-sidebar" class="dash-sidebar" aria-label="Investor navigation">
-   - NavItems.tsx: <nav class="dash-nav" aria-label="Dashboard"> with aria-current on the active link
-   - Header.tsx: .dash-header with a .dash-menu-toggle button (aria-label, aria-expanded,
-     aria-controls="dashboard-sidebar"); the icon span is aria-hidden
+   - dashboard/AppShell.tsx: .dash-shell, .dash-main, <main class="dash-content" id="main-content">
+   - dashboard/Sidebar.tsx: <aside class="dash-sidebar" aria-label="Investor navigation"> (768px+)
+   - dashboard/MobileNav.tsx: .dash-mobile-nav with a .dash-menu-toggle button ("Open menu" /
+     "Close menu", aria-expanded, aria-controls) and a .dash-mobile-panel (below 768px)
+   - layout/NavItems.tsx: <nav class="dash-nav" aria-label="Dashboard"> with aria-current on the active link
+   - dashboard/Header.tsx: .dash-header with branding and a demo investor placeholder
    - dashboard/index.tsx: .dash-card-grid; PortfolioTable.tsx: .dash-table-wrap
 */
 
@@ -60,6 +61,17 @@
   gap: var(--dash-gap);
 }
 
+/* MobileNav: hidden on wide screens (shown in the max-width: 767px block below) */
+.dash-mobile-nav {
+  display: none;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.dash-mobile-panel {
+  margin-top: 0.75rem;
+}
+
 /* Mobile menu toggle: hidden on wide screens */
 .dash-menu-toggle {
   display: none;
@@ -98,7 +110,8 @@
 /* Touch-friendly targets */
 .dash-nav a,
 .dash-nav button,
-.dash-header button {
+.dash-header button,
+.dash-mobile-nav button {
   min-height: var(--dash-touch-min);
   min-width: var(--dash-touch-min);
   display: inline-flex;
@@ -121,6 +134,7 @@
 .dash-nav button:focus-visible,
 .dash-header a:focus-visible,
 .dash-header button:focus-visible,
+.dash-mobile-nav button:focus-visible,
 .dash-content a:focus-visible,
 .dash-content button:focus-visible {
   outline: 2px solid var(--dash-focus);
@@ -133,28 +147,16 @@
     flex-direction: column;
   }
 
-  .dash-main {
-    order: -1; /* header with the menu button comes first */
+  .dash-sidebar {
+    display: none;
+  }
+
+  .dash-mobile-nav {
+    display: block;
   }
 
   .dash-menu-toggle {
     display: inline-flex;
-  }
-
-  .dash-sidebar {
-    width: 100%;
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
-    display: none;
-  }
-
-  .dash-shell.nav-open .dash-sidebar {
-    display: block;
-    order: -1;
-  }
-
-  .dash-shell.nav-open .dash-main {
-    order: 0;
   }
 
   .dash-header,

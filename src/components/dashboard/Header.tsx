@@ -3,35 +3,21 @@ import { useRouterState } from '@tanstack/react-router'
 import { getPageTitle } from '../layout/navConfig'
 
 type HeaderProps = {
-  navOpen: boolean
-  sidebarId: string
-  onToggleNav: () => void
+  /** Optional actions shown on the right, before the user placeholder */
   children?: ReactNode
 }
 
 /**
- * Top bar: PREIshare branding, mobile menu toggle, page title from navConfig,
- * optional actions slot, and a demo investor placeholder (no real auth).
- * Below 768px the .dash-menu-toggle button (styled in src/styles/dashboard.css)
- * opens and closes the sidebar; aria-expanded and aria-controls describe that state.
+ * Top bar: PREIshare branding, page title from navConfig, optional actions slot,
+ * and a demo investor placeholder (no real auth). The phone menu lives in MobileNav.
  */
-export function Header({ navOpen, sidebarId, onToggleNav, children }: HeaderProps) {
+export function Header({ children }: HeaderProps) {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   })
 
   return (
     <header className="dash-header dashboard-header justify-between">
-      <button
-        type="button"
-        className="dash-menu-toggle"
-        aria-label={navOpen ? 'Close navigation' : 'Open navigation'}
-        aria-expanded={navOpen}
-        aria-controls={sidebarId}
-        onClick={onToggleNav}
-      >
-        <span aria-hidden="true">{navOpen ? '✕' : '☰'}</span>
-      </button>
       <div className="header-brand flex min-w-0 flex-1 items-center gap-3">
         <span
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-[var(--sea-ink)] text-sm font-semibold text-white"
