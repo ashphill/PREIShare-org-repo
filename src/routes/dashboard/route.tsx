@@ -1,7 +1,7 @@
 // Layout route for everything under /dashboard (folder form: dashboard/route.tsx).
 // Child pages like dashboard/index.tsx render inside the <Outlet /> below.
 import { Outlet, createFileRoute } from '@tanstack/react-router'
-import { AppShell } from '../../components/layout/AppShell'
+import { AppShell } from '../../components/dashboard/AppShell'
 
 export const Route = createFileRoute('/dashboard')({
   component: DashboardLayout,

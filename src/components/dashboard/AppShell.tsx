@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { useRouterState } from '@tanstack/react-router'
-import { Sidebar } from './Sidebar'
+import { Sidebar } from '../layout/Sidebar'
 import { Header } from './Header'
 
 type AppShellProps = {
