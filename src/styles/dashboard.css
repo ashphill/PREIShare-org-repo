@@ -1,6 +1,6 @@
 /* src/styles/dashboard.css
    Shared responsive + accessibility polish for the PREIshare investor shell.
-   Loaded through src/styles.css (the app's global stylesheet).
+   Imported by src/styles.css right after Tailwind, so it loads on every page.
    Breakpoints: below 768px the sidebar collapses behind a header menu button;
    card grids go 1 column -> 2 columns (640px) -> 3 columns (1024px).
 
