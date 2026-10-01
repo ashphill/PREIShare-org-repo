@@ -31,7 +31,11 @@ function DashboardHomePage() {
         </p>
       </div>
 
-      <div className="dashboard-home__stats dash-card-grid" aria-label="Key metrics">
+      {/* QA fix (tablet, 640–1023px): a lone last card in the 2-column grid spans both columns */}
+      <div
+        className="dashboard-home__stats dash-card-grid sm:max-lg:[&>*:last-child:nth-child(odd)]:col-span-2"
+        aria-label="Key metrics"
+      >
         {DEMO_METRICS.map((metric) => (
           <MetricCard key={metric.label} {...metric} />
         ))}
