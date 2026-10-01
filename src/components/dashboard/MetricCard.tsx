@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-export type StatsCardProps = {
+export type MetricCardProps = {
   label: string
   value: string
   hint?: string
@@ -8,8 +8,12 @@ export type StatsCardProps = {
   icon?: ReactNode
 }
 
-/** Reusable metric tile for the investor dashboard home. Presentational only: no data fetching. */
-export function StatsCard({ label, value, hint, icon }: StatsCardProps) {
+/**
+ * MetricCard: one reusable investor KPI tile (label, main value, optional hint).
+ * Presentational only: props in, JSX out. No data fetching, router hooks, or charts.
+ * Callers pass sample values for now (e.g. hint="Sample total").
+ */
+export function MetricCard({ label, value, hint, icon }: MetricCardProps) {
   return (
     <article
       className="stats-card rounded-xl border border-[var(--line)] p-4"

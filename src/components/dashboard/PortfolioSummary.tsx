@@ -10,9 +10,11 @@ export type PortfolioSummaryProps = {
   totalLabel: string
   holdings?: HoldingSnapshot[]
   isSampleData?: boolean
+  /** Shown instead of the list when there are no holdings */
+  emptyMessage?: string
 }
 
-/** Sample holdings only. Real portfolio data is wired in a later step. */
+/** MOCK PLACEHOLDER: sample holdings only. Replace with real portfolio data in a later sprint. */
 export const MOCK_HOLDINGS: HoldingSnapshot[] = [
   { id: 'h1', name: 'Sample Multifamily Fund A', allocationLabel: '40%', valueLabel: '$120,000' },
   { id: 'h2', name: 'Sample Industrial Note B', allocationLabel: '35%', valueLabel: '$105,000' },
@@ -25,6 +27,7 @@ export function PortfolioSummary({
   totalLabel,
   holdings = MOCK_HOLDINGS,
   isSampleData = true,
+  emptyMessage = 'No holdings to summarize yet.',
 }: PortfolioSummaryProps) {
   return (
     <section
@@ -45,15 +48,19 @@ export function PortfolioSummary({
         <span className="portfolio-summary__total-label">Total (sample)</span>
         <span className="portfolio-summary__total-value font-bold">{totalLabel}</span>
       </p>
-      <ul className="portfolio-summary__list space-y-2">
-        {holdings.map((item) => (
-          <li key={item.id} className="portfolio-summary__row flex justify-between gap-3 text-sm">
-            <span className="portfolio-summary__name">{item.name}</span>
-            <span className="portfolio-summary__allocation">{item.allocationLabel}</span>
-            <span className="portfolio-summary__value">{item.valueLabel}</span>
-          </li>
-        ))}
-      </ul>
+      {holdings.length === 0 ? (
+        <p className="empty-state text-sm text-[var(--sea-ink-soft)]">{emptyMessage}</p>
+      ) : (
+        <ul className="portfolio-summary__list space-y-2">
+          {holdings.map((item) => (
+            <li key={item.id} className="portfolio-summary__row flex justify-between gap-3 text-sm">
+              <span className="portfolio-summary__name">{item.name}</span>
+              <span className="portfolio-summary__allocation">{item.allocationLabel}</span>
+              <span className="portfolio-summary__value">{item.valueLabel}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
   )
 }

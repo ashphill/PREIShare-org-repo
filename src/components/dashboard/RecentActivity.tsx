@@ -9,9 +9,11 @@ export type RecentActivityProps = {
   title?: string
   items?: ActivityItem[]
   isSampleData?: boolean
+  /** Shown instead of the list when there is no activity */
+  emptyMessage?: string
 }
 
-/** Sample activity only. A live feed is wired in a later step. */
+/** MOCK PLACEHOLDER: sample activity only. Replace with a live feed in a later sprint. */
 export const MOCK_ACTIVITY: ActivityItem[] = [
   { id: 'a1', title: 'Distribution posted (sample)', detail: 'Sample Multifamily Fund A', dateLabel: 'Mar 1, 2026' },
   { id: 'a2', title: 'New deal opened (sample)', detail: 'Sample Retail Center C', dateLabel: 'Feb 24, 2026' },
@@ -24,6 +26,7 @@ export function RecentActivity({
   title = 'Recent activity',
   items = MOCK_ACTIVITY,
   isSampleData = true,
+  emptyMessage = 'No recent activity yet.',
 }: RecentActivityProps) {
   return (
     <section
@@ -40,19 +43,23 @@ export function RecentActivity({
           </p>
         ) : null}
       </div>
-      <ol className="recent-activity__list space-y-3">
-        {items.map((item) => (
-          <li key={item.id} className="recent-activity__item flex justify-between gap-3 text-sm">
-            <div className="recent-activity__body">
-              <p className="recent-activity__title font-medium">{item.title}</p>
-              <p className="recent-activity__detail text-[var(--sea-ink-soft)]">{item.detail}</p>
-            </div>
-            <time className="recent-activity__date shrink-0 text-[var(--sea-ink-soft)]">
-              {item.dateLabel}
-            </time>
-          </li>
-        ))}
-      </ol>
+      {items.length === 0 ? (
+        <p className="empty-state text-sm text-[var(--sea-ink-soft)]">{emptyMessage}</p>
+      ) : (
+        <ol className="recent-activity__list space-y-3">
+          {items.map((item) => (
+            <li key={item.id} className="recent-activity__item flex justify-between gap-3 text-sm">
+              <div className="recent-activity__body">
+                <p className="recent-activity__title font-medium">{item.title}</p>
+                <p className="recent-activity__detail text-[var(--sea-ink-soft)]">{item.detail}</p>
+              </div>
+              <time className="recent-activity__date shrink-0 text-[var(--sea-ink-soft)]">
+                {item.dateLabel}
+              </time>
+            </li>
+          ))}
+        </ol>
+      )}
     </section>
   )
 }
