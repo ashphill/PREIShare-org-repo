@@ -14,7 +14,7 @@
 
 import { createServerFn, createServerOnlyFn } from '@tanstack/react-start'
 import { deleteCookie, getCookie, setCookie } from '@tanstack/react-start/server'
-import { createServerSupabaseClient } from '../supabase/server'
+import { createServerSupabaseClient } from '../supabase.server'
 
 const ACCESS_TOKEN_COOKIE = 'preishare-access-token'
 const REFRESH_TOKEN_COOKIE = 'preishare-refresh-token'

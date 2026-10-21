@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
-import { createBrowserSupabaseClient } from '../../lib/supabase/client'
+import { createBrowserSupabaseClient } from '../../lib/supabase.client'
 import { setSession } from '../../lib/auth/session'
 
 export const Route = createFileRoute('/auth/login')({

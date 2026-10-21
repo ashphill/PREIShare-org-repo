@@ -17,7 +17,7 @@
 
 import { createServerFn } from '@tanstack/react-start'
 import { requireSessionUser } from '../lib/auth/session'
-import { createServerSupabaseClient } from '../lib/supabase/server'
+import { createServerSupabaseClient } from '../lib/supabase.server'
 import type { PropertyListingInsert, PropertyListingRow, PropertyListingUpdate } from '../lib/supabase/types'
 import { parseCreateListingInput, parseUpdateListingInput } from '../lib/listings/schema'
 import type { FieldErrors } from '../lib/listings/schema'
