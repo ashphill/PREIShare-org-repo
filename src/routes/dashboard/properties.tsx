@@ -10,7 +10,7 @@
 //   `listings_select_own` (owner_id = auth.uid()) decides which rows come back.
 // - No service-role key, no secret env vars, and no "fetch everything then filter
 //   in React" — the component only renders what RLS already allowed.
-import { createFileRoute, Link, redirect } from '@tanstack/react-router'
+import { createFileRoute, Link, Outlet, redirect, useChildMatches } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { requireSessionUser } from '../../lib/auth/session'
 import { createSupabaseServerClient } from '../../lib/supabase.server'
@@ -87,7 +87,7 @@ function PageHeader() {
         </p>
       </div>
       <Link
-        to="/dashboard/listings/new"
+        to="/dashboard/properties/new"
         className="min-h-[44px] rounded-md bg-[var(--sea-ink)] px-4 py-2 font-semibold text-white"
       >
         Add property
@@ -98,6 +98,10 @@ function PageHeader() {
 
 function PropertiesPage() {
   const { properties, error } = Route.useLoaderData()
+  // properties.new.tsx is a child route (/dashboard/properties/new). When it is
+  // active, show the child page instead of the list.
+  const childMatches = useChildMatches()
+  if (childMatches.length > 0) return <Outlet />
 
   return (
     <section aria-labelledby="properties-heading">
