@@ -39,6 +39,26 @@ function requireServerEnv(name: string): string {
   return value
 }
 
+/**
+ * Project URL for server code. Prefers SUPABASE_URL, falls back to VITE_SUPABASE_URL
+ * (same public value), and rejects the .env.example placeholder with a clear message.
+ */
+function requireServerSupabaseUrl(): string {
+  const env = (globalThis as { process?: { env: Record<string, string | undefined> } }).process?.env
+  const candidates = [env?.SUPABASE_URL, env?.VITE_SUPABASE_URL]
+    .map((value) => value?.trim())
+    .filter((value): value is string => Boolean(value))
+  const url = candidates.find((value) => !value.includes('your-project-ref'))
+  if (!url) {
+    throw new Error(
+      candidates.length > 0
+        ? `SUPABASE_URL is still the placeholder from .env.example. Put your real project URL in .env.local and restart the dev server. ${CHECKLIST}`
+        : `Missing server env var SUPABASE_URL. Add it to .env.local (local) or your host's server env. ${CHECKLIST}`,
+    )
+  }
+  return url
+}
+
 /** Server-side auth options: never store or refresh a browser session on the server. */
 const serverAuthOptions = {
   persistSession: false,
@@ -55,7 +75,7 @@ const serverAuthOptions = {
 export function createServerSupabaseClient(accessToken?: string): ServerSupabaseClient {
   assertServer()
 
-  const url = requireServerEnv('SUPABASE_URL')
+  const url = requireServerSupabaseUrl()
   const anonKey = requireServerEnv('VITE_SUPABASE_ANON_KEY')
 
   if (accessToken) {
@@ -76,7 +96,7 @@ export function createServerSupabaseClient(accessToken?: string): ServerSupabase
 export function createServiceRoleSupabaseClient(): ServerSupabaseClient {
   assertServer()
 
-  const url = requireServerEnv('SUPABASE_URL')
+  const url = requireServerSupabaseUrl()
   const serviceRoleKey = requireServerEnv('SUPABASE_SERVICE_ROLE_KEY')
 
   return createClient<Database>(url, serviceRoleKey, { auth: serverAuthOptions })
