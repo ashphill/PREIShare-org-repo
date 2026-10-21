@@ -21,10 +21,10 @@ access must stay on the server and never ship in the browser bundle.
 | Row-level security so sponsors only see their own rows | **Yes** | `supabase/migrations/20250321000000_property_listings.sql` enables RLS with four owner-only policies (`owner_id = auth.uid()`). Two-account test: User B could not see User A's listing, and each user only saw their own. Checklist rows 1.2–1.3 and 4.1–4.4 PASS. |
 | Secrets kept out of the client bundle | **Yes** | `.env.example` has placeholders only; real values live in an ignored `.env.local` and Vercel env settings. The service-role key is read only in `src/lib/supabase/server.ts` with no `VITE_` prefix. Repo, git history, and the production JS bundle contain no key values. Checklist rows 5.1–5.5 PASS. |
 
-**Gaps:** everything the brief put in scope passed verification. Two operational follow-ups remain:
-the Supabase secret key appeared in a setup screenshot (never in the repo) and should be confirmed
-as rotated, and Supabase "Confirm email" was switched off for local testing and must be on before
-real sponsors sign up. Listing **update** exists as a server function only (no edit screen), and
+**Gaps:** everything the brief put in scope passed verification. Supabase "Confirm email" was
+switched off for local testing and has been turned back on (2026-10-21). One accepted risk remains:
+the Supabase secret key appeared in a setup screenshot shared in a chat (never in the repo), and the
+team chose to keep the current key for now (see Known limitations). Listing **update** exists as a server function only (no edit screen), and
 there is no delete screen. Both were out of scope in the brief (create + read only).
 
 ## 3. Architecture decisions
@@ -79,11 +79,14 @@ there is no delete screen. Both were out of scope in the brief (create + read on
 
 ## 5. Known limitations
 
-- **Email confirmation:** "Confirm email" was turned off in Supabase for local testing. Turn it on
-  and set Authentication → URL Configuration → Site URL to the production URL before real sponsors
-  sign up.
-- **Secret key rotation:** confirm the Supabase secret key shown in a setup screenshot has been
-  rotated and the old one revoked (checklist section 6 follow-up).
+- **Email confirmation:** "Confirm email" is back **on** (2026-10-21). New sponsors must click the
+  emailed link before signing in. Check that Authentication → URL Configuration → Site URL points to
+  the production URL so the link opens the live site.
+- **Secret key not rotated (accepted risk):** the Supabase secret (service-role) key was visible in
+  a setup screenshot shared in a chat; it was never committed to the repo or shipped to the browser.
+  The team decided to keep the current key for now. Recommendation: rotate it in Supabase
+  (Project Settings → API Keys), update `.env.local` and Vercel, and revoke the old key before real
+  sponsor data is stored.
 - **No edit or delete screens:** `updateListing` exists on the server and RLS allows owner-only
   update and delete, but there is no edit or delete UI.
 - **Minimal listing fields:** no images, documents, contacts, IRR / cap-rate metrics, or

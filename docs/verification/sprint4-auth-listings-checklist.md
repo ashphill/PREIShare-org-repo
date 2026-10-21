@@ -68,17 +68,18 @@ No passwords, keys, or `.env` contents are recorded here.
 | Sign-up showed "Failed to fetch" | `VITE_SUPABASE_URL` in local `.env.local` was still the placeholder; replaced with the real project URL and restarted the dev server. | PASS |
 | Login showed "Could not verify your session (fetch failed)" | `SUPABASE_URL` was still the placeholder. Fixed the env value; `src/lib/supabase/server.ts` now falls back to the public URL and rejects the placeholder with a clear error. | PASS |
 | Production had no Supabase env vars | Added the four variables in Vercel → Environments and redeployed. | PASS (`/dashboard` redirects to login on production) |
-| Secret key was visible in a screenshot shared during setup (not in the repo) | Recommended rotating the Supabase secret key and updating `.env.local` + Vercel. | Follow-up: confirm the old secret key is revoked |
+| Secret key was visible in a screenshot shared during setup (not in the repo) | Recommended rotating the Supabase secret key and updating `.env.local` + Vercel. | Not rotated: owner chose to keep the current key (accepted risk, documented in handoff). Key is still absent from repo, history, and client bundle (rows 5.1–5.5). |
+| "Confirm email" off for local testing | Turned back on in Supabase Authentication → Sign In / Providers (2026-10-21). | PASS |
 
 ## 7. Sign-off
 
 - [x] Client story covered: sponsors can log in; listings load from Postgres under RLS; secrets kept out of the client bundle
-- [x] All critical rows above are PASS (one follow-up noted in section 6)
+- [x] All critical rows above are PASS (one accepted risk noted in section 6)
 - [x] No real secrets written into this markdown file
 
 **Overall:** PASS  
 **Notes for handoff (Step 12):**
-- Supabase "Confirm email" is **off** for local testing; turn it back on (and set the Site URL) before real sponsors sign up.
-- Confirm the old Supabase secret key is revoked after the rotation.
+- Supabase "Confirm email" turned back **on** (2026-10-21); confirm Site URL points to production.
+- Supabase secret key was not rotated (owner's decision); rotating it before real sponsor data is stored is still recommended.
 - Edit/delete listing UI is not built yet (server `updateListing` and RLS update/delete policies exist).
 - Home, Portfolio, Deals, and Profile still show labeled sample data; only Listings is live.
