@@ -138,7 +138,11 @@ export const setSession = createServerFn({ method: 'POST' })
     const { data: userData, error } = await supabase.auth.getUser(data.accessToken)
     if (error || !userData.user) {
       clearSessionCookies()
-      throw new Error('Could not verify your session. Please sign in again.')
+      // Log the real reason on the server (Terminal) and include it in the message for debugging.
+      console.error('[auth] setSession could not verify token:', error?.message ?? 'no user returned')
+      throw new Error(
+        `Could not verify your session (${error?.message ?? 'no user returned'}). Please sign in again.`,
+      )
     }
     writeSessionCookies(data)
     return { user: toSessionUser(userData.user) }
