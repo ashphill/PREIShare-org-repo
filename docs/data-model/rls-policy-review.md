@@ -84,4 +84,4 @@ Never leave the table half-created without RLS. The script is safe to re-run
 ## Sign-off
 - Reviewed by: Ashton Phillips
 - Date: 2026-10-20
-- Applied to Supabase project: [ ] (tick after running the migration and checking the Table Editor)
+- Applied to Supabase project: [x] 2026-10-20 (SQL Editor run; Table Editor shows property_listings with 4 RLS policies)
