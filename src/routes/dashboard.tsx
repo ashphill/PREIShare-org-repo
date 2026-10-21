@@ -1,23 +1,26 @@
-// Layout route for everything under /dashboard (folder form: dashboard/route.tsx).
+// src/routes/dashboard.tsx — layout + auth guard for everything under /dashboard.
+// (Flat-file layout: child pages live in src/routes/dashboard/ and render in <Outlet />.)
 // Child pages like dashboard/index.tsx render inside the <Outlet /> below.
 // AppShell (header, sidebar, mobile nav) lives only here, never in child pages,
 // so the dashboard home never shows doubled chrome.
 //
-// AUTH GATE: beforeLoad calls the getUser server function (src/lib/auth/session.ts),
-// which verifies the session cookie on the server. No signed-in sponsor -> redirect
-// to /auth/login. Because this is the layout route, every /dashboard/* child page
+// AUTH GATE: beforeLoad calls the getUser server function (src/lib/auth/session.ts).
+// Its handler runs on the server, reads the httpOnly session cookie, and verifies
+// it with the server client from src/lib/supabase.server.ts. No signed-in sponsor
+// -> redirect to /login. It only redirects when the session is missing, so a
+// signed-in sponsor never bounces. Because this is the layout route, every /dashboard/* child page
 // inherits the gate.
 import { useState } from 'react'
 import { Outlet, createFileRoute, redirect, useNavigate, useRouter } from '@tanstack/react-router'
-import { AppShell } from '../../components/dashboard/AppShell'
-import { getUser, signOut } from '../../lib/auth/session'
-import { createBrowserSupabaseClient } from '../../lib/supabase.client'
+import { AppShell } from '../components/dashboard/AppShell'
+import { getUser, signOut } from '../lib/auth/session'
+import { createBrowserSupabaseClient } from '../lib/supabase.client'
 
 export const Route = createFileRoute('/dashboard')({
   beforeLoad: async () => {
     const user = await getUser()
     if (!user) {
-      throw redirect({ to: '/auth/login' })
+      throw redirect({ to: '/login' })
     }
     return { user }
   },
@@ -52,7 +55,7 @@ function SignedInBar({ email }: { email: string | null }) {
     try {
       await signOut()
       await router.invalidate()
-      await navigate({ to: '/auth/login' })
+      await navigate({ to: '/login' })
     } finally {
       setPending(false)
     }
