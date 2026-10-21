@@ -8,8 +8,13 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
+import { createClientOnlyFn } from '@tanstack/react-start'
 import { createBrowserSupabaseClient } from '../lib/supabase.client'
 import { setSession } from '../lib/auth/session'
+
+// Browser-only Supabase client. createClientOnlyFn strips this call (and the
+// *.client.ts import) from the server build, so SSR never loads browser-only code.
+const getBrowserSupabase = createClientOnlyFn(() => createBrowserSupabaseClient())
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
@@ -29,7 +34,7 @@ function LoginPage() {
     setPending(true)
 
     try {
-      const supabase = createBrowserSupabaseClient()
+      const supabase = getBrowserSupabase()
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password,

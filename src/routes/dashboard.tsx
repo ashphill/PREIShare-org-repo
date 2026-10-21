@@ -14,7 +14,12 @@ import { useState } from 'react'
 import { Outlet, createFileRoute, redirect, useNavigate, useRouter } from '@tanstack/react-router'
 import { AppShell } from '../components/dashboard/AppShell'
 import { getUser, signOut } from '../lib/auth/session'
+import { createClientOnlyFn } from '@tanstack/react-start'
 import { createBrowserSupabaseClient } from '../lib/supabase.client'
+
+// Browser-only Supabase client. createClientOnlyFn strips this call (and the
+// *.client.ts import) from the server build, so SSR never loads browser-only code.
+const getBrowserSupabase = createClientOnlyFn(() => createBrowserSupabaseClient())
 
 export const Route = createFileRoute('/dashboard')({
   beforeLoad: async () => {
@@ -48,7 +53,7 @@ function SignedInBar({ email }: { email: string | null }) {
     setPending(true)
     try {
       // End the browser's Supabase session, then clear the server session cookies.
-      await createBrowserSupabaseClient().auth.signOut()
+      await getBrowserSupabase().auth.signOut()
     } catch {
       // Still clear the server cookies below even if the browser call fails.
     }
