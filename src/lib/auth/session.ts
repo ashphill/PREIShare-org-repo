@@ -12,7 +12,7 @@
 // - The sponsor's Supabase tokens live in httpOnly cookies that browser
 //   JavaScript cannot read.
 
-import { createServerFn } from '@tanstack/react-start'
+import { createServerFn, createServerOnlyFn } from '@tanstack/react-start'
 import { deleteCookie, getCookie, setCookie } from '@tanstack/react-start/server'
 import { createServerSupabaseClient } from '../supabase/server'
 
@@ -38,6 +38,12 @@ export type SessionUser = {
 
 export type SponsorSession = {
   user: SessionUser
+}
+
+/** Server-only: the verified user plus their access token (for RLS-scoped queries). Never sent to the browser. */
+export type VerifiedServerSession = {
+  user: SessionUser
+  accessToken: string
 }
 
 type TokenPair = {
@@ -71,7 +77,7 @@ function toSessionUser(user: { id: string; email?: string | undefined }): Sessio
  * If the access token expired, try the refresh token once and rotate the cookies.
  * Returns null (and clears cookies) when there is no valid session.
  */
-async function readVerifiedSession(): Promise<SponsorSession | null> {
+async function readVerifiedSession(): Promise<VerifiedServerSession | null> {
   const accessToken = getCookie(ACCESS_TOKEN_COOKIE)
   const refreshToken = getCookie(REFRESH_TOKEN_COOKIE)
 
@@ -82,7 +88,7 @@ async function readVerifiedSession(): Promise<SponsorSession | null> {
   if (accessToken) {
     // getUser(token) asks Supabase Auth to validate the token; it does not just decode it.
     const { data, error } = await supabase.auth.getUser(accessToken)
-    if (!error && data.user) return { user: toSessionUser(data.user) }
+    if (!error && data.user) return { user: toSessionUser(data.user), accessToken }
   }
 
   if (refreshToken) {
@@ -93,7 +99,7 @@ async function readVerifiedSession(): Promise<SponsorSession | null> {
         refreshToken: data.session.refresh_token,
         expiresIn: data.session.expires_in,
       })
-      return { user: toSessionUser(data.user) }
+      return { user: toSessionUser(data.user), accessToken: data.session.access_token }
     }
   }
 
@@ -102,8 +108,9 @@ async function readVerifiedSession(): Promise<SponsorSession | null> {
 }
 
 /** Current sponsor session (user only), or null when signed out. */
-export const getSession = createServerFn({ method: 'GET' }).handler(async () => {
-  return readVerifiedSession()
+export const getSession = createServerFn({ method: 'GET' }).handler(async (): Promise<SponsorSession | null> => {
+  const session = await readVerifiedSession()
+  return session ? { user: session.user } : null
 })
 
 /** Current signed-in sponsor, or null. Used by the /dashboard beforeLoad gate. */
@@ -152,4 +159,14 @@ export const setSession = createServerFn({ method: 'POST' })
 export const signOut = createServerFn({ method: 'POST' }).handler(async () => {
   clearSessionCookies()
   return { ok: true }
+})
+
+/**
+ * SERVER-ONLY helper for other server functions (e.g. src/server/listings.ts).
+ * Returns the verified sponsor and their access token, or null when signed out.
+ * The token lets server code query Supabase AS the sponsor so RLS applies.
+ * createServerOnlyFn makes this throw if it is ever called from browser code.
+ */
+export const requireSessionUser = createServerOnlyFn(async (): Promise<VerifiedServerSession | null> => {
+  return readVerifiedSession()
 })
