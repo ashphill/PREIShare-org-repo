@@ -86,7 +86,7 @@ No security gaps were found in the checks above; the only failure was the build 
 
 - **Supabase secret key not rotated:** the secret key appeared in a setup screenshot shared in a chat (never in the repo or bundle). The owner chose to keep it; rotating it before real sponsor data is stored is still recommended.
 - **Service-role client exists but is unused:** `createServiceRoleSupabaseClient` is defined in `src/lib/supabase.server.ts` for future admin jobs. Any future use must stay in server code and be reviewed.
-- **`profiles` migration:** `20250321000000_sponsors_properties_rls.sql` was reviewed and tested on a local Postgres. Confirm it has been run in the Supabase project before features depend on `profiles`. It shares a version number with the first migration, so apply it via the SQL Editor, not `supabase db push`.
+- **`profiles` migration:** applied in the Supabase SQL Editor on 2026-10-23; Table Editor shows `public.profiles` with 3 RLS policies. It shares a version number with the first migration, so apply it via the SQL Editor, not `supabase db push`, in new environments.
 - **No edit/delete UI yet:** RLS update/delete policies exist but those flows have not been exercised through the UI.
 - **Testing used two accounts and the happy paths;** no automated tests or load testing.
 
@@ -97,6 +97,6 @@ No security gaps were found in the checks above; the only failure was the build 
 **Ready to show stakeholders?** yes
 
 **Summary:**
-On 2026-10-23 I verified on the Production site that signed-out visitors are redirected from every dashboard and properties URL to `/login`, that a wrong password is rejected, that a valid sponsor can sign in, and that sign-out ends access. As Sponsor A I saw only my own properties, created a new property that was saved as mine, and saw a clear error (with no success) for an invalid submit. As Sponsor B in a separate window I could not see any of Sponsor A's properties, and the RLS policies rejected forged owners in a two-user database test. A review of `src/lib/supabase.client.ts` vs `src/lib/supabase.server.ts`, plus a scan of the live JS bundle, confirmed the service-role key stays out of the client. The remaining risks above (key rotation, applying the profiles migration) do not block a demo.
+On 2026-10-23 I verified on the Production site that signed-out visitors are redirected from every dashboard and properties URL to `/login`, that a wrong password is rejected, that a valid sponsor can sign in, and that sign-out ends access. As Sponsor A I saw only my own properties, created a new property that was saved as mine, and saw a clear error (with no success) for an invalid submit. As Sponsor B in a separate window I could not see any of Sponsor A's properties, and the RLS policies rejected forged owners in a two-user database test. A review of `src/lib/supabase.client.ts` vs `src/lib/supabase.server.ts`, plus a scan of the live JS bundle, confirmed the service-role key stays out of the client. The remaining risks above (mainly key rotation) do not block a demo.
 
 **Sign-off:** Ashton Phillips, 2026-10-23

@@ -64,7 +64,7 @@ ones, with secret keys kept out of the browser. What sponsors can do now:
 - `src/routes/dashboard/properties.new.tsx` — create property under RLS (owner from session)
 - `src/lib/listings/schema.ts` — shared input validation for property fields
 - `supabase/migrations/20250321000000_property_listings.sql` — `property_listings` table + RLS (applied in Supabase)
-- `supabase/migrations/20250321000000_sponsors_properties_rls.sql` — `profiles` table + RLS, and re-asserted listing policies
+- `supabase/migrations/20250321000000_sponsors_properties_rls.sql` — `profiles` table + RLS, and re-asserted listing policies (applied in Supabase)
 
 ## Known limitations
 
@@ -73,10 +73,10 @@ Taken from `docs/security-verification-checklist.md` (all checks passed; these a
 - **Secret key not rotated.** The Supabase secret key appeared in a setup screenshot shared in a chat
   (never in the repo or the bundle). The owner chose to keep it; rotation is still recommended before
   real sponsor data is stored.
-- **`profiles` migration may not be applied yet.** `20250321000000_sponsors_properties_rls.sql` was
-  reviewed and tested on a local Postgres. Confirm it has been run in the Supabase project (SQL
-  Editor) before relying on `profiles`. It shares a version number with the first migration, so it
-  should not be applied with `supabase db push`.
+- **`profiles` migration applied (2026-10-23).** `20250321000000_sponsors_properties_rls.sql` was run in
+  the Supabase SQL Editor; Table Editor shows `public.profiles` (id, display_name, created_at,
+  updated_at) with 3 RLS policies. It shares a version number with the first migration, so apply it
+  with the SQL Editor, not `supabase db push`, in any new environment.
 - **No profile UI.** Nothing creates or shows a `profiles` row yet; the header still shows the
   "Investor (demo)" placeholder next to the real "Signed in as …" bar.
 - **No edit/delete UI.** RLS update and delete policies exist, but those flows are not built or
@@ -106,7 +106,7 @@ Taken from `docs/security-verification-checklist.md` (all checks passed; these a
 
 - [ ] Read the four source docs above before changing auth or RLS.
 - [ ] Copy `.env.example` to `.env.local` and fill in values yourself; never commit real secret values or paste them into chats or screenshots.
-- [ ] Confirm `20250321000000_sponsors_properties_rls.sql` has been run in Supabase (Table Editor shows `profiles` with RLS on).
+- [ ] In a new Supabase project, run both migrations in the SQL Editor (listings first, then `20250321000000_sponsors_properties_rls.sql`) and confirm `profiles` shows 3 RLS policies.
 - [ ] Keep service-role usage server-only (`src/lib/supabase.server.ts`); never give it a `VITE_` prefix.
 - [ ] Use `src/lib/supabase.client.ts` in browser code and wrap it in `createClientOnlyFn` inside route files (TanStack Start blocks `*.client.ts` in the server build).
 - [ ] Re-run `docs/security-verification-checklist.md` after any policy, client, or env change.
