@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthSignupRouteImport } from './routes/auth/signup'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
@@ -20,6 +21,7 @@ import { Route as DashboardDealsRouteImport } from './routes/dashboard/deals'
 import { Route as DashboardPortfolioRouteImport } from './routes/dashboard/portfolio'
 import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile'
 import { Route as DashboardPropertiesRouteImport } from './routes/dashboard/properties'
+import { Route as ApiPropertiesSearchRouteImport } from './routes/api/properties/search'
 import { Route as DashboardListingsIndexRouteImport } from './routes/dashboard/listings/index'
 import { Route as DashboardListingsNewRouteImport } from './routes/dashboard/listings/new'
 import { Route as DashboardPropertiesNewRouteImport } from './routes/dashboard/properties.new'
@@ -42,6 +44,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
@@ -79,6 +86,11 @@ const DashboardPropertiesRoute = DashboardPropertiesRouteImport.update({
   path: '/properties',
   getParentRoute: () => DashboardRoute,
 } as any)
+const ApiPropertiesSearchRoute = ApiPropertiesSearchRouteImport.update({
+  id: '/api/properties/search',
+  path: '/api/properties/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardListingsIndexRoute = DashboardListingsIndexRouteImport.update({
   id: '/listings/',
   path: '/listings/',
@@ -100,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
+  '/search': typeof SearchRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/dashboard/deals': typeof DashboardDealsRoute
@@ -107,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/properties': typeof DashboardPropertiesRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
+  '/api/properties/search': typeof ApiPropertiesSearchRoute
   '/dashboard/listings/new': typeof DashboardListingsNewRoute
   '/dashboard/properties/new': typeof DashboardPropertiesNewRoute
   '/dashboard/listings/': typeof DashboardListingsIndexRoute
@@ -115,6 +129,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
+  '/search': typeof SearchRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/dashboard/deals': typeof DashboardDealsRoute
@@ -122,6 +137,7 @@ export interface FileRoutesByTo {
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/properties': typeof DashboardPropertiesRouteWithChildren
   '/dashboard': typeof DashboardIndexRoute
+  '/api/properties/search': typeof ApiPropertiesSearchRoute
   '/dashboard/listings/new': typeof DashboardListingsNewRoute
   '/dashboard/properties/new': typeof DashboardPropertiesNewRoute
   '/dashboard/listings': typeof DashboardListingsIndexRoute
@@ -132,6 +148,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
+  '/search': typeof SearchRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/dashboard/deals': typeof DashboardDealsRoute
@@ -139,6 +156,7 @@ export interface FileRoutesById {
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/properties': typeof DashboardPropertiesRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
+  '/api/properties/search': typeof ApiPropertiesSearchRoute
   '/dashboard/listings/new': typeof DashboardListingsNewRoute
   '/dashboard/properties/new': typeof DashboardPropertiesNewRoute
   '/dashboard/listings/': typeof DashboardListingsIndexRoute
@@ -150,6 +168,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/dashboard'
     | '/login'
+    | '/search'
     | '/auth/login'
     | '/auth/signup'
     | '/dashboard/deals'
@@ -157,6 +176,7 @@ export interface FileRouteTypes {
     | '/dashboard/profile'
     | '/dashboard/properties'
     | '/dashboard/'
+    | '/api/properties/search'
     | '/dashboard/listings/new'
     | '/dashboard/properties/new'
     | '/dashboard/listings/'
@@ -165,6 +185,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/login'
+    | '/search'
     | '/auth/login'
     | '/auth/signup'
     | '/dashboard/deals'
@@ -172,6 +193,7 @@ export interface FileRouteTypes {
     | '/dashboard/profile'
     | '/dashboard/properties'
     | '/dashboard'
+    | '/api/properties/search'
     | '/dashboard/listings/new'
     | '/dashboard/properties/new'
     | '/dashboard/listings'
@@ -181,6 +203,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/dashboard'
     | '/login'
+    | '/search'
     | '/auth/login'
     | '/auth/signup'
     | '/dashboard/deals'
@@ -188,6 +211,7 @@ export interface FileRouteTypes {
     | '/dashboard/profile'
     | '/dashboard/properties'
     | '/dashboard/'
+    | '/api/properties/search'
     | '/dashboard/listings/new'
     | '/dashboard/properties/new'
     | '/dashboard/listings/'
@@ -198,8 +222,10 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   LoginRoute: typeof LoginRoute
+  SearchRoute: typeof SearchRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthSignupRoute: typeof AuthSignupRoute
+  ApiPropertiesSearchRoute: typeof ApiPropertiesSearchRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -230,6 +256,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/login': {
@@ -280,6 +313,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/properties'
       preLoaderRoute: typeof DashboardPropertiesRouteImport
       parentRoute: typeof DashboardRoute
+    }
+    '/api/properties/search': {
+      id: '/api/properties/search'
+      path: '/api/properties/search'
+      fullPath: '/api/properties/search'
+      preLoaderRoute: typeof ApiPropertiesSearchRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/dashboard/listings/': {
       id: '/dashboard/listings/'
@@ -345,8 +385,10 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   DashboardRoute: DashboardRouteWithChildren,
   LoginRoute: LoginRoute,
+  SearchRoute: SearchRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthSignupRoute: AuthSignupRoute,
+  ApiPropertiesSearchRoute: ApiPropertiesSearchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
