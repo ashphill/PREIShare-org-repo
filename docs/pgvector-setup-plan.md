@@ -68,7 +68,7 @@ Real values live in `.env.local` (git-ignored) and in Vercel's environment setti
 | `VITE_SUPABASE_ANON_KEY` | The browser key; only gets what RLS allows (read-only on `properties`) | Yes | No |
 | `SUPABASE_URL` | The same URL, read by server code | Server name | No |
 | `SUPABASE_SERVICE_ROLE_KEY` | Trusted server or seed scripts that write sample rows later; bypasses RLS | **No, server only** | No |
-| `OPENAI_API_KEY` | Generating embeddings later (new for Sprint 5) | **No, server only, never `VITE_`** | No |
+| `EMBEDDING_API_KEY` (optional `EMBEDDING_MODEL`) | Generating embeddings later (new for Sprint 5) | **No, server only, never `VITE_`** | No |
 
 The migration itself runs in the **Supabase SQL Editor** (as in Sprint 4), so it needs no local environment variables. If the Supabase CLI is used later, it uses its own login and the project ref, not a value stored in this repo.
 
