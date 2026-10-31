@@ -23,7 +23,7 @@ Each property has two kinds of data:
 
 Search turns the buyer's query into an embedding with the same recipe and model, compares it to these stored vectors, and returns the closest top-K. It does not depend on exact keyword matches.
 
-This is a **separate sample data set for the search demo**. It does not change the Sprint 4 `property_listings` table or its owner-only RLS (auth and RLS changes are out of scope in the requirements brief).
+This is a **separate sample data set for the search demo**, in a new table named `properties`. It does not change the Sprint 4 `property_listings` table or its owner-only RLS (auth and RLS changes are out of scope in the requirements brief).
 
 ## Identifiers
 
@@ -78,7 +78,7 @@ Rules:
 
 ### Dimension placeholder
 
-- The vector length is **DIMENSION_TODO** everywhere until a later step picks the embedding model. The model decides the real number.
+- The vector length is written as **DIMENSION_TODO** in this doc, and **DIMENSION_TODO = 1536** for now. That is the planned value, matching the planned model OpenAI `text-embedding-3-small`. The real size must match whatever model is finally chosen; if the model changes, this number changes with it.
 - **Critical:** query vectors and stored vectors must come from the **same model with the same DIMENSION_TODO length**. A mismatched length breaks inserts or search; a different model with the same length gives meaningless scores.
 - When the model is chosen, replace DIMENSION_TODO in one pass in this doc, the migration and the TypeScript types, and write down the model name next to it.
 
@@ -108,7 +108,7 @@ Never replace `description` with the vector. You need both: the text for the UI 
 
 **In scope**
 
-- One sample properties table (or equivalent) with `id`, the listing fields above and `embedding`
+- One sample table named `properties` with `id`, the listing fields above and `embedding`
 - One embedding per property
 - The canonical embedding input recipe and a single DIMENSION_TODO placeholder
 - Null-until-backfilled lifecycle
@@ -136,10 +136,9 @@ Never replace `description` with the vector. You need both: the text for the UI 
 
 ## Open questions
 
-- The exact embedding model name, and the real number that replaces DIMENSION_TODO
+- Confirm the embedding model (planned: `text-embedding-3-small`, so DIMENSION_TODO = 1536) before generating any vectors
 - The final distance operator in SQL (cosine planned), and whether `match_properties` returns distance or similarity
 - How many sample listings to seed (the requirements say at least 8), and whether `city` and `price` are filled in for all of them
-- The table name for the sample set, decided in the migration plan
 - Whether to record the model name per row later; for now it's one model for the whole table, so it isn't modeled
 
 ## Handoff
