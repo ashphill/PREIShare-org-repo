@@ -1,7 +1,7 @@
 // src/lib/embeddings/types.ts
 // Contract only: no network code here.
 // Source of truth: docs/embedding-data-model.md (DIMENSION_TODO = 1536,
-// model text-embedding-3-small) and the migration
+// model gemini-embedding-001 at 1536 dimensions) and the migration
 // supabase/migrations/20250315000000_enable_pgvector_properties.sql (embedding vector(1536)).
 
 /**
@@ -12,7 +12,7 @@
 export const EMBEDDING_DIMENSIONS = 1536
 
 /** Default embedding model; its output length is EMBEDDING_DIMENSIONS. Override with EMBEDDING_MODEL. */
-export const DEFAULT_EMBEDDING_MODEL = 'text-embedding-3-small'
+export const DEFAULT_EMBEDDING_MODEL = 'gemini-embedding-001'
 
 /**
  * The text fields from a PREIshare property that get embedded.

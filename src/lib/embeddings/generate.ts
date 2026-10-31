@@ -10,8 +10,11 @@
 import { DEFAULT_EMBEDDING_MODEL, EMBEDDING_DIMENSIONS } from './types'
 import type { EmbeddingResult, PropertyEmbeddingInput } from './types'
 
-/** OpenAI-compatible embeddings endpoint. Override with EMBEDDING_API_URL if needed. */
-const DEFAULT_EMBEDDING_API_URL = 'https://api.openai.com/v1/embeddings'
+/**
+ * Default: Google Gemini's OpenAI-compatible embeddings endpoint (free tier).
+ * Any OpenAI-compatible provider works via EMBEDDING_API_URL, as long as it returns 1536 numbers.
+ */
+const DEFAULT_EMBEDDING_API_URL = 'https://generativelanguage.googleapis.com/v1beta/openai/embeddings'
 
 /** Read a server env var at call time (works with tsconfig "types": ["vite/client"]). */
 function readServerEnv(name: string): string | undefined {
@@ -122,7 +125,7 @@ async function callEmbeddingProvider(text: string, apiKey: string, model: string
       'Content-Type': 'application/json',
       Authorization: `Bearer ${apiKey}`,
     },
-    // `dimensions` asks text-embedding-3 models for exactly this length.
+    // `dimensions` asks the model for exactly this length (gemini-embedding-001 supports 1536).
     body: JSON.stringify({ model, input: text, dimensions: EMBEDDING_DIMENSIONS }),
   })
 

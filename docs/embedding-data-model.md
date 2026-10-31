@@ -78,7 +78,7 @@ Rules:
 
 ### Dimension placeholder
 
-- The vector length is written as **DIMENSION_TODO** in this doc, and **DIMENSION_TODO = 1536** for now. That is the planned value, matching the planned model OpenAI `text-embedding-3-small`. The real size must match whatever model is finally chosen; if the model changes, this number changes with it.
+- The vector length is written as **DIMENSION_TODO** in this doc, and **DIMENSION_TODO = 1536** for now. The chosen model is Google `gemini-embedding-001` (free tier), asked for 1536 numbers. (We first planned OpenAI `text-embedding-3-small`, also 1536, and switched to Gemini to stay free; the size did not change.) The real size must match whatever model is finally chosen; if the model changes, this number changes with it.
 - **Critical:** query vectors and stored vectors must come from the **same model with the same DIMENSION_TODO length**. A mismatched length breaks inserts or search; a different model with the same length gives meaningless scores.
 - When the model is chosen, replace DIMENSION_TODO in one pass in this doc, the migration and the TypeScript types, and write down the model name next to it.
 
@@ -136,7 +136,7 @@ Never replace `description` with the vector. You need both: the text for the UI 
 
 ## Open questions
 
-- Confirm the embedding model (planned: `text-embedding-3-small`, so DIMENSION_TODO = 1536) before generating any vectors
+- Decided: `gemini-embedding-001` at 1536 dimensions. Listings and queries must both use it; switching models later means re-embedding every row.
 - The final distance operator in SQL (cosine planned), and whether `match_properties` returns distance or similarity
 - How many sample listings to seed (the requirements say at least 8), and whether `city` and `price` are filled in for all of them
 - Whether to record the model name per row later; for now it's one model for the whole table, so it isn't modeled
