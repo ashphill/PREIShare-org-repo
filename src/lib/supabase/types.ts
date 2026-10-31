@@ -129,7 +129,26 @@ export type Database = {
       }
     }
     Views: { [_ in never]: never }
-    Functions: { [_ in never]: never }
+    Functions: {
+      /** supabase/migrations/20250315000001_match_properties_function.sql */
+      match_properties: {
+        Args: {
+          /** pgvector(1536) as text, e.g. "[0.1,0.2,...]" */
+          query_embedding: string
+          match_count?: number
+        }
+        Returns: {
+          id: string
+          title: string
+          description: string
+          city: string | null
+          property_type: string | null
+          price: number | null
+          /** 1 - cosine distance: HIGHER = better match */
+          similarity: number
+        }[]
+      }
+    }
     Enums: { [_ in never]: never }
     CompositeTypes: { [_ in never]: never }
   }
