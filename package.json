@@ -11,7 +11,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit --project tsconfig.typecheck.json",
-    "typecheck:errors": "tsc --noEmit"
+    "typecheck:errors": "tsc --noEmit",
+    "seed:embeddings": "npx tsx --env-file=.env.local scripts/seed-property-embeddings.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",

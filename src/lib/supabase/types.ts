@@ -89,6 +89,44 @@ export type Database = {
         }
         Relationships: []
       }
+      /**
+       * Sprint 5 sample listings for semantic search.
+       * Mirrors supabase/migrations/20250315000000_enable_pgvector_properties.sql.
+       * `embedding` is pgvector(1536); over the API it travels as text like "[0.1,0.2,...]".
+       */
+      properties: {
+        Row: {
+          id: string
+          title: string
+          description: string
+          city: string | null
+          property_type: string | null
+          price: number | null
+          embedding: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          description: string
+          city?: string | null
+          property_type?: string | null
+          price?: number | null
+          embedding?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string
+          city?: string | null
+          property_type?: string | null
+          price?: number | null
+          embedding?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: { [_ in never]: never }
     Functions: { [_ in never]: never }
