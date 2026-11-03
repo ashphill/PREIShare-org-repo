@@ -35,10 +35,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node.js 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           # README says "Node.js 20 or newer"; 22 is required by `npm run test`
           # (Node's built-in test runner with --experimental-strip-types needs Node >= 22.6).

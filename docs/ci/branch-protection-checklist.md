@@ -58,7 +58,7 @@ It triggers on `pull_request` to `main` (types `opened`, `synchronize`, `reopene
 - [x] Concurrency: group `pr-ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}`, `cancel-in-progress: true`
 - [x] Required check job name: `Install, lint, typecheck, test, build`
 - [x] No secrets, deploy jobs or Supabase steps in the workflow
-- [ ] Workflow has run green at least once on a real PR (needed before the check can be selected)
+- [x] Workflow has run green at least once on a real PR: draft PR #3, run 41612327083 (2026-11-03); see `docs/ci/e2e-verification-log.md`
 - [ ] Maintainer who can edit branch protection: __________________
 - [ ] Date the settings were enabled and checked against a real PR check run: __________________
 
