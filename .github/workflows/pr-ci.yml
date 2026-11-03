@@ -1,7 +1,7 @@
 # .github/workflows/pr-ci.yml
 # PREIshare PR CI — scaffold only (Sprint 6, Step 6).
 # Contract: docs/ci/pipeline-design.md + docs/ci/project-ci-inventory.md
-# This pass: checkout -> Node 20 -> npm ci. Typecheck and build are added in the next step.
+# Stages: checkout -> Node 20 -> npm ci -> typecheck -> build. Lint/test are gaps (no scripts yet).
 # No secrets, no deploy, no Supabase.
 
 name: PR CI
@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   ci:
-    name: Install dependencies
+    name: Install, typecheck, build
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -37,3 +37,14 @@ jobs:
 
       - name: Install dependencies (clean, from package-lock.json)
         run: npm ci
+
+      # Exact script from package.json: "typecheck": "tsc --noEmit --project tsconfig.typecheck.json"
+      # (NOT typecheck:errors, which includes intentional-error fixtures and always fails.)
+      # No continue-on-error: a type error must turn the PR check red.
+      - name: Typecheck
+        run: npm run typecheck
+
+      # Exact script from package.json: "build": "vite build" (same build Vercel runs).
+      # Runs after typecheck so type errors fail faster. No continue-on-error.
+      - name: Build
+        run: npm run build
