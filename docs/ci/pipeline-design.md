@@ -23,11 +23,11 @@ Built from:
 ## Ordered stages (happy path)
 
 1. **Checkout.** Fetch the PR's code (the merge of the PR into `main`, which is GitHub's default for `pull_request`) so the runner checks what would actually land.
-2. **Setup Node.** Install **Node.js 20**. The repo has no `.nvmrc` or `engines` field, so the source is `README.md` ("Node.js 20 or newer") from the inventory. Turn on npm caching here (see Caching intent).
+2. **Setup Node.** Install **Node.js 22**. The README says "Node.js 20 or newer"; it was 20 at first, then raised to 22 in Step 8 because `npm run test` uses Node's built-in TypeScript type stripping, which needs Node 22.6 or newer. Turn on npm caching here (see Caching intent).
 3. **Install dependencies.** Run `npm ci` for a clean install exactly from `package-lock.json`. It fails if the lockfile and `package.json` disagree.
-4. **Lint: GAP, skipped.** The inventory marks `lint` **MISSING**. There's no step until a real `lint` script exists.
+4. **Lint.** Run `npm run lint` (`node scripts/lint.mjs`, added in Step 8). It's the zero-dependency hygiene lint: no secrets, no `VITE_` server keys, no `debugger` or `.only`, no hidden CI failures. ESLint is still a gap (see `ci-scripts-notes.md`).
 5. **Typecheck.** Run `npm run typecheck` (strict TypeScript, no output files). It's fast, so it runs before the slower build.
-6. **Test: GAP, skipped.** The inventory marks `test` **MISSING**. There's no step until a real `test` script exists.
+6. **Test.** Run `npm run test` (Node's built-in test runner, run once with no watch mode, offline; added in Step 8). It starts with the embedding helpers.
 7. **Build.** Run `npm run build` (`vite build`), the same build Vercel runs, so broken imports or config (like the Sprint 4 `*.client.ts` failure) fail on the PR, not after merge.
 
 **Why this order:**
@@ -43,11 +43,11 @@ Built from:
 | Stage | Script or command (from `project-ci-inventory.md`) | Required on PR? | Inventory source |
 | --- | --- | --- | --- |
 | Checkout | GitHub checkout (no script) | Yes | n/a |
-| Setup Node | Node 20, npm cache on | Yes | Repo facts: README "Node.js 20 or newer" |
+| Setup Node | Node 22, npm cache on | Yes | README "Node.js 20 or newer"; 22 needed by `test` |
 | Install | `npm ci` | Yes | Bucket A #1; `package-lock.json` (lockfileVersion 3) |
-| Lint | **gap**: no `lint` script | No (gap) | Scripts table: lint **MISSING** |
+| Lint | `npm run lint` (= `node scripts/lint.mjs`) | Yes | Added in Step 8 (was MISSING in the inventory) |
 | Typecheck | `npm run typecheck` (= `tsc --noEmit --project tsconfig.typecheck.json`) | Yes | Scripts table: `typecheck`; Bucket A #2 |
-| Test | **gap**: no `test` script | No (gap) | Scripts table: test **MISSING** |
+| Test | `npm run test` (= `node --test --experimental-strip-types "src/**/*.test.ts"`) | Yes | Added in Step 8 (was MISSING in the inventory) |
 | Build | `npm run build` (= `vite build`) | Yes | Scripts table: `build`; Bucket A #3 |
 
 **Never used in CI:**
@@ -86,7 +86,7 @@ Built from:
 - **Deploying** to Production or Preview from this workflow. Vercel's own GitHub integration keeps handling deploys.
 - **Live Supabase changes:** running migrations, `npm run seed:embeddings`, or any reads or writes against a real database.
 - **Calls to the embedding API**, or end-to-end search, login or dashboard tests (all Bucket B).
-- **Lint and test steps,** until real scripts exist (gaps, below).
+- **ESLint and browser end-to-end tests** (gaps, see `docs/ci/ci-scripts-notes.md`).
 - **Manual QA, product acceptance and final merge approval,** which stay with people (Bucket C).
 - **AI auto-merge** or automatic approval of PRs. AI review prompts later are advice for people only.
 - **Branch protection settings** (a person does that in GitHub after the workflow is proven).
@@ -106,8 +106,8 @@ Built from:
 
 ## Open questions / gaps
 
-- [ ] **Lint script missing.** Should we add ESLint and a `lint` script? Then add stage 4.
-- [ ] **Test script missing.** Should we add a test runner (for example, Vitest) and a `test` script, starting with the pure helpers in `src/lib/embeddings/generate.ts`? Then add stage 6.
+- [x] **Lint script:** added in Step 8 (`scripts/lint.mjs`). Still open: add ESLint, which needs a local `npm install -D` and a lockfile commit.
+- [x] **Test script:** added in Step 8 (Node's built-in runner, 8 tests for `src/lib/embeddings/generate.ts`).
 - [ ] **Node version not pinned.** We're using 20 from the README. Should we add `.nvmrc` or `engines` so local, CI and Vercel agree?
 - [ ] **Does the build pass on a clean runner** with no env vars at all? The first CI run will tell us. If not, add placeholders (see Environment and secrets).
 - [ ] **Committed `src/routeTree.gen.ts`.** Should CI also run `npm run generate-routes` and fail if the file changes? That's optional and not in the first version.
@@ -117,6 +117,6 @@ Built from:
 
 When this design is stable, Step 6 may scaffold `.github/workflows/pr-ci.yml` from **these stages only**:
 
-checkout → setup Node 20 with npm cache → `npm ci` → `npm run typecheck` → `npm run build`
+checkout → setup Node 22 with npm cache → `npm ci` → `npm run lint` → `npm run typecheck` → `npm run test` → `npm run build` (lint and test added in Step 8)
 
 It runs on `pull_request` to `main`, with read-only permissions, no secrets, and no deploy or database steps.

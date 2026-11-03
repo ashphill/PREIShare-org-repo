@@ -12,6 +12,8 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit --project tsconfig.typecheck.json",
     "typecheck:errors": "tsc --noEmit",
+    "lint": "node scripts/lint.mjs",
+    "test": "node --test --experimental-strip-types \"src/**/*.test.ts\"",
     "seed:embeddings": "npx tsx --env-file=.env.local scripts/seed-property-embeddings.ts"
   },
   "dependencies": {

@@ -7,8 +7,9 @@
 // Secrets: the API key is read ONLY from the server environment (EMBEDDING_API_KEY).
 // Never import this file from browser code and never give the key a VITE_ prefix.
 
-import { DEFAULT_EMBEDDING_MODEL, EMBEDDING_DIMENSIONS } from './types'
-import type { EmbeddingResult, PropertyEmbeddingInput } from './types'
+// Explicit .ts extension so Node's built-in test runner (npm run test) can load this file too.
+import { DEFAULT_EMBEDDING_MODEL, EMBEDDING_DIMENSIONS } from './types.ts'
+import type { EmbeddingResult, PropertyEmbeddingInput } from './types.ts'
 
 /**
  * Default: Google Gemini's OpenAI-compatible embeddings endpoint (free tier).

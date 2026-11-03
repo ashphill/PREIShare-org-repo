@@ -1,7 +1,8 @@
 # .github/workflows/pr-ci.yml
-# PREIshare PR CI — scaffold only (Sprint 6, Step 6).
+# PREIshare PR CI (Sprint 6). Runs on every pull request to main.
 # Contract: docs/ci/pipeline-design.md + docs/ci/project-ci-inventory.md
-# Stages: checkout -> Node 20 -> npm ci -> typecheck -> build. Lint/test are gaps (no scripts yet).
+# Stages (docs/ci/pipeline-design.md order): checkout -> Node 22 -> npm ci -> lint -> typecheck -> test -> build.
+# Every command below is an exact package.json script (see docs/ci/ci-scripts-notes.md). No continue-on-error anywhere.
 # No secrets, no deploy, no Supabase.
 
 name: PR CI
@@ -21,28 +22,39 @@ concurrency:
 
 jobs:
   ci:
-    name: Install, typecheck, build
+    name: Install, lint, typecheck, test, build
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js 20
+      - name: Set up Node.js 22
         uses: actions/setup-node@v4
         with:
-          # Inventory: no .nvmrc/engines; README says "Node.js 20 or newer".
-          node-version: "20"
+          # README says "Node.js 20 or newer"; 22 is required by `npm run test`
+          # (Node's built-in test runner with --experimental-strip-types needs Node >= 22.6).
+          node-version: "22"
           # npm + package-lock.json (inventory), so cache npm downloads keyed on the lockfile.
           cache: npm
 
       - name: Install dependencies (clean, from package-lock.json)
         run: npm ci
 
+      # Exact script from package.json: "lint": "node scripts/lint.mjs"
+      # Zero-dependency repo lint: no secrets, no VITE_ server keys, no debugger/.only, no hidden CI failures.
+      - name: Lint
+        run: npm run lint
+
       # Exact script from package.json: "typecheck": "tsc --noEmit --project tsconfig.typecheck.json"
       # (NOT typecheck:errors, which includes intentional-error fixtures and always fails.)
       # No continue-on-error: a type error must turn the PR check red.
       - name: Typecheck
         run: npm run typecheck
+
+      # Exact script from package.json: "test": "node --test --experimental-strip-types \"src/**/*.test.ts\""
+      # Non-watch: runs once and exits (non-zero on any failing test). Offline: provider is mocked.
+      - name: Test
+        run: npm run test
 
       # Exact script from package.json: "build": "vite build" (same build Vercel runs).
       # Runs after typecheck so type errors fail faster. No continue-on-error.
