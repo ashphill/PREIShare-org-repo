@@ -7,17 +7,26 @@
 
 name: PR CI
 
+# Every pull request into main (docs/ci/pipeline-design.md: main is the only merge target).
+# opened = new PR, synchronize = new commits pushed to it, reopened = closed PR reopened.
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 # Read-only: CI only needs to read the code.
 permissions:
   contents: read
 
-# A new push to the same PR cancels the older, now-outdated run.
+# One run per PR: a new push cancels the older, now-outdated run for the SAME PR only.
+# Group = this workflow's name + PR number (falls back to the ref if there's no PR number),
+# so different PRs and other workflows never cancel each other.
 concurrency:
-  group: pr-ci-${{ github.event.pull_request.number }}
+  group: pr-ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
