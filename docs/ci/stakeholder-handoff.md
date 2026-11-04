@@ -150,3 +150,103 @@ From `docs/ci/e2e-verification-log.md` (2026-11-03, throwaway draft **PR #3**, c
 ## 9. One-paragraph executive summary
 
 Every PREIshare pull request into `main` now automatically runs install, lint, typecheck, unit tests and a production build on GitHub, in about 25 seconds. A broken change shows a red X that names the failing step before anyone merges, instead of failing on a teammate's laptop or in a Vercel deploy. We proved this on a real test PR, which went green, then red on a deliberate error, then green after the fix, and a newer push cancelled the outdated run. A prompt pack helps reviewers spot auth, database and secret risks, but AI output is advice only. Approving and merging, handling secrets and judging the product stay with people. The main open item is for an admin to turn on branch protection using the checklist so a red check actually blocks merging. After that, the next topic should add ESLint, more tests and a matching Node version everywhere.
+
+---
+
+## Topic 2: AI review overlay on the finished CI gate
+
+The topic 1 record above stays in force. Continuous integration is already done: the GitHub Actions workflow at `.github/workflows/pr-ci.yml` already installs, lints, typechecks, tests and builds every pull request into `main`.
+
+This section doesn't rebuild that workflow, the prompt pack or the live site. It explains how human review sits on top of that finished gate.
+
+**Update to topic 1, section 4:** branch protection on `main` has since been **turned on**. Section 4 above said "Not enabled yet." The current status is in "Branch protection" below, copied from the Enforcement record in `docs/ci/branch-protection-checklist.md`.
+
+### What the AI review can and cannot do
+
+The AI review can:
+
+- Suggest findings on a pull request, in the required output shape from the system instruction: Review limits, then findings with severity, evidence, category and question_for_human, then not-found blocks, then "Decision: left to the human reviewer. Advisory only."
+- Help a human reviewer look faster. It's an advisor only.
+
+The AI review cannot:
+
+- Approve a pull request.
+- Merge a pull request.
+- Replace a human decision about sign-in, money, privacy or product intent.
+- Count as a required GitHub status check or a required reviewer.
+- Start a review by itself. A person opens the chat assistant; no GitHub Action runs it.
+
+A green CI check is evidence that the commands passed. It isn't permission to merge.
+
+### Where to read the overlay
+
+There's no second handoff file. Start with the overview, then open the piece you need.
+
+| Piece | Path | What a stakeholder uses it for |
+| --- | --- | --- |
+| Overlay overview | `docs/ci/ai-review-overlay-brief.md` | Why this review layer exists, and the four risks a green check can't decide |
+| Who may approve and who may merge | `docs/ci/pr-approval-roles.md` | People only: Ashton Phillips (`ashphill`) approves and merges, and the AI is an advisor |
+| System instruction and output shape | `docs/ci/ai-pr-review-prompts.md` | The standing rules and required answer shape for the AI, plus the revision rule added after the sample |
+| Human-judgment checklist | `docs/ci/human-judgment-checklist.md` | Pass, fail or needs-info for sign-in, money, privacy and product intent; any fail or needs-info blocks merge |
+| Review runbook | `docs/ci/ai-review-orchestration.md` | The same order every time, with six stop points before approval and merge |
+| Sample critique and prompt revision | `docs/ci/sample-pr-review/critique-and-prompt-revision.md` | What the practice review caught, what it got wrong, and the one rule we added |
+| Branch-protection record | `docs/ci/branch-protection-checklist.md` | What GitHub actually saved (see its "Enforcement record") |
+| Practice sample | `docs/ci/samples/README.md` | The planted privacy sample and its CI result. It's not app code. |
+
+### Branch protection: enforced now versus only documented
+
+Copied from the Enforcement record in `docs/ci/branch-protection-checklist.md` (2026-11-03, `ashphill`, classic branch protection on `main`, GitHub Free plan, no paid upgrade). This handoff doesn't change GitHub settings.
+
+#### Enforced on this repository now
+
+- **Require a pull request before merging into `main`.** Result: saved.
+- **At least 1 human approval before merge,** with stale approvals dismissed when new commits are pushed. Result: saved.
+- **Required status check `Install, lint, typecheck, test, build`** from the existing `.github/workflows/pr-ci.yml`. Result: saved.
+- Force pushes and branch deletion on `main` aren't allowed.
+
+#### Documented but not enforced on this plan
+
+- **Admin bypass is allowed.** "Do not allow bypassing the above settings" was left off on purpose, so the admin (`ashphill`) can still merge without an approval or with a red check, and can push to `main` directly. For the admin, the approval and status-check rules aren't fully enforced. This was a deliberate choice: GitHub won't let a pull request's author approve their own pull request, so on a one-person project a strict rule would block every merge.
+- **"Who may merge" isn't enforced by GitHub.** The control wasn't shown for this personal-account repository.
+- **"Require branches to be up to date before merging" is off.**
+- **The human-judgment checklist and the runbook are documented process,** not GitHub settings. People have to follow them, especially whenever admin bypass is used.
+
+The AI assistant isn't a required approver and isn't a required status check.
+
+### Sample privacy pull request
+
+The practice pull request with one planted privacy mistake, PR #4 (https://github.com/ashphill/PREIShare-org-repo/pull/4), **wasn't merged**. It's still open, and its `pr-ci` check passed, which shows CI alone doesn't catch privacy problems.
+
+The practice files stay under `docs/ci/samples/` on that unmerged branch for learning. They aren't live member-facing code. Sprint 7 must not merge that sample.
+
+### Decision log: why people remain the approvers
+
+Approval and merge stay with the person named in `docs/ci/pr-approval-roles.md`, Ashton Phillips. A passing CI run can't judge these four risks. The AI may comment, but a person must decide.
+
+| Risk | Why a person must decide | Artifact that supports the person |
+| --- | --- | --- |
+| Sign-in | A change can pass every test and still let a signed-out visitor reach `/dashboard`, or show one sponsor another sponsor's listings, because no test checks that rule. | `docs/ci/pr-approval-roles.md` and `docs/ci/human-judgment-checklist.md` (Sign-in) |
+| Money | Asking prices, currency and new paid-API costs affect what investors rely on, and an AI comment can't accept that an amount or cost is right. | `docs/ci/human-judgment-checklist.md` (Money) |
+| Privacy | The practice review planted a privacy mistake on purpose: contact details on a public share preview. The AI flagged it, but it also made up a second finding and later lowered the severity. A person judged the AI's notes against the checklist and marked privacy as a fail that blocks merge. See `docs/ci/sample-pr-review/critique-and-prompt-revision.md`. | `docs/ci/human-judgment-checklist.md` (Privacy) and the critique file |
+| Product intent | A change can be technically fine and still drift from what PREIshare is for: helping investors and sponsors find and manage real-estate opportunities they can trust. | `docs/ci/ai-review-overlay-brief.md` and `docs/ci/human-judgment-checklist.md` (Product intent) |
+
+### Sprint 7 next actions
+
+These pieces are already done and working, so none of them is missing, unbuilt or work to create:
+
+- **The pull-request CI workflow is done and running.** Don't rebuild `.github/workflows/pr-ci.yml`.
+- **The AI review prompt pack, meaning the system instruction, is done.** `docs/ci/ai-pr-review-prompts.md` is written and has already been revised once.
+- **The existing Production site is already live** at https://prei-share-org-repo-one.vercel.app on the current Vercel Hobby project. Don't create a new hosting project. Later confirmation uses that same public URL.
+
+What Sprint 7 should do:
+
+- Keep merge decisions with the person named in the roles file. The AI remains an advisor.
+- On future pull requests, follow `docs/ci/ai-review-orchestration.md` and `docs/ci/human-judgment-checklist.md`, and write the approval before merging, including whenever admin bypass is used.
+- Fix the severity gap the critique recorded: the re-run rated the planted privacy leak "medium," not "high." Make that fix inside `docs/ci/ai-pr-review-prompts.md`, not in a new prompt file.
+- If a second collaborator joins, make them the human reviewer who gives the official GitHub approval, and consider turning off admin bypass.
+- If the GitHub plan or repo setup later allows a rule that's only documented today, such as "who may merge," apply it from the branch-protection checklist. Until then, keep that gap recorded honestly. The gap doesn't mean CI was never built.
+- Leave PR #4 unmerged.
+
+### What stakeholders should remember
+
+The automatic checks stay required evidence. The person who approves is still a person. The sample privacy change wasn't merged.
