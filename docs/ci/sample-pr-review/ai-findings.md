@@ -5,7 +5,7 @@ This file records one chat-assistant review of the PREIshare sample pull request
 ## Run record
 
 - **Date:** 2026-11-03
-- **Human who ran the chat:** Ashton Phillips (`ashphill`), who had his coding agent start the chat on his instruction
+- **Human who ran the chat:** Ashton Phillips (`ashphill`), with the chat started by his coding agent on his instruction.
 - **Tool used:** a chat assistant in a new, empty chat: a fresh Claude instance with no memory of this project's conversation, no tools (it made 0 tool calls), and no access to the repository. It received only Message 1 and Message 2 below. A coding agent did not edit the repository for this review.
 - **Sequence followed:** `docs/ci/ai-review-orchestration.md` (A: check CI; B: a person starts the chat with the system instruction first)
 - **System instruction source:** `docs/ci/ai-pr-review-prompts.md`. Message 1 was the "System instruction" and "Required output shape" sections, pasted first, with a line saying the rules stay in force for the whole chat. The assistant confirmed "Understood. Advisor only; I cannot approve or merge."
