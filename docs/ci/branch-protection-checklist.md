@@ -4,7 +4,7 @@
 
 This connects the automatic green/red signal from `.github/workflows/pr-ci.yml` to the merge rules for `main`, so a red check actually **blocks** a merge instead of just being a warning.
 
-**Status: prepared, not enabled.** This document is a checklist only. Branch protection has **not** been turned on. Changing it needs **admin** rights on `ashphill/PREIShare-org-repo` (GitHub: **Settings → Branches**, or **Settings → Rules → Rulesets**). A contributor without admin rights prepares and verifies this list, and a maintainer flips the settings.
+**Status: enabled on `main` (2026-11-03).** Enforced now: a pull request is required, 1 human approval, and the required check `Install, lint, typecheck, test, build`. Documented only, not enforced: admin bypass is allowed, "who may merge" can't be set, and "up to date before merging" is off. Full details are in the **Enforcement record** at the end of this file. The checklist below is the original plan.
 
 Sources: `.github/workflows/pr-ci.yml`, `docs/ci/pipeline-design.md` (trigger, failure policy, out of scope), `docs/ci/pr-pain-and-goals.md` (people own merge).
 
@@ -66,7 +66,7 @@ It triggers on `pull_request` to `main` (types `opened`, `synchronize`, `reopene
 
 - **A red required check should block merge.** Fix and push, and the check re-runs automatically.
 - **A green check means** the automated gates passed (install, lint, typecheck, test, build). It doesn't mean product, security or code review is done.
-- **Until a maintainer enables these settings,** red checks are visible but **not enforced**. Reviewers must check the PR's Checks tab themselves before approving.
+- **These settings are now enabled (2026-11-03),** but admin bypass is allowed, so reviewers must still check the PR's Checks tab and follow the human checklist before approving.
 
 ## Enforcement record
 

@@ -81,11 +81,11 @@ Every prompt forbids the AI from approving, saying "LGTM" or recommending a merg
 4. Don't require the Vercel checks or any check that doesn't exist yet (like ESLint or end-to-end tests).
 5. Don't let routine contributor work bypass these rules. The checklist suggests leaving admin bypass on at first so a maintainer can recover if CI itself breaks.
 
-**Status after verification:** [x] Not enabled yet / [ ] Enabled on `main`
+**Status after verification:** [ ] Not enabled yet / [x] Enabled on `main` (2026-11-03)
 
-**Evidence:** `docs/ci/e2e-verification-log.md`, section 3 ("Person still required for merge: Needs work, branch protection not enabled").
+**Evidence:** the Enforcement record in `docs/ci/branch-protection-checklist.md`.
 
-Until it's enabled, red checks are **visible but not enforced**, so reviewers must check the PR's **Checks** tab before approving.
+Admin bypass is still allowed, so reviewers must check the PR's **Checks** tab before approving.
 
 ---
 
@@ -93,7 +93,7 @@ Until it's enabled, red checks are **visible but not enforced**, so reviewers mu
 
 | Limit | Impact | Recommended next action |
 | --- | --- | --- |
-| **Branch protection not enabled** | A red or unreviewed PR can still be merged by hand | An admin follows section 4 and the checklist. Then open a test PR to confirm merge is blocked on red. |
+| **Branch protection: admin bypass allowed** | Enabled on `main` (2026-11-03), but the admin can still bypass it | Follow the human checklist whenever bypass is used. |
 | **Secrets / private env** | PR CI deliberately runs with no secrets, so nothing that needs Supabase keys or the embedding API key is tested on PRs | Keep it that way by default. If integration tests are ever added, use separate test keys as GitHub Secrets in a separate job, and never commit `.env` files. |
 | **Supabase / external services** | Login, dashboard data, migrations, seeding and live semantic search are **not** tested in CI. The embedding API is mocked in tests. | Next sprint, decide whether a separate test Supabase project and integration job are worth the cost. Until then, test these by hand. |
 | **Thin tests, no ESLint** | Only 8 unit tests (embedding helper), and the lint is a small custom hygiene check, not ESLint. Most logic and UI bugs won't be caught by CI. | Add ESLint (`npm install -D eslint @eslint/js typescript-eslint` plus a lockfile commit) and tests for `src/lib/listings/schema.ts` and `src/lib/property-search.ts` |
@@ -137,7 +137,7 @@ From `docs/ci/e2e-verification-log.md` (2026-11-03, throwaway draft **PR #3**, c
 
 ## 8. What should roll into the next Sprint 6 topic
 
-1. **Turn on branch protection on `main`** with the required check `Install, lint, typecheck, test, build` and 1 required approval. Then open a test PR with a deliberate error and confirm the **Merge** button is blocked.
+1. **Branch protection on `main`: done (2026-11-03)** with the required check and 1 approval. Next, confirm on a test PR that **Merge** is blocked on red.
 2. **Add ESLint.** Install `eslint`, `@eslint/js` and `typescript-eslint` locally, add `eslint.config.js`, fix the findings, commit `package.json` and `package-lock.json`, and fold it into the existing **Lint** step.
 3. **Add tests where bugs would hurt most:** the listing validators in `src/lib/listings/schema.ts` and `clampMatchCount` and empty-query handling in `src/lib/property-search.ts`. That brings coverage beyond the embedding helper.
 4. **Remove local-vs-CI drift:** add `.nvmrc` (22) and update the README's Node requirement so laptops, CI and Vercel agree. Run the full local sequence on Ashton's Mac and record the result in the verification log.
@@ -149,13 +149,13 @@ From `docs/ci/e2e-verification-log.md` (2026-11-03, throwaway draft **PR #3**, c
 
 ## 9. One-paragraph executive summary
 
-Every PREIshare pull request into `main` now automatically runs install, lint, typecheck, unit tests and a production build on GitHub, in about 25 seconds. A broken change shows a red X that names the failing step before anyone merges, instead of failing on a teammate's laptop or in a Vercel deploy. We proved this on a real test PR, which went green, then red on a deliberate error, then green after the fix, and a newer push cancelled the outdated run. A prompt pack helps reviewers spot auth, database and secret risks, but AI output is advice only. Approving and merging, handling secrets and judging the product stay with people. The main open item is for an admin to turn on branch protection using the checklist so a red check actually blocks merging. After that, the next topic should add ESLint, more tests and a matching Node version everywhere.
+Every PREIshare pull request into `main` now automatically runs install, lint, typecheck, unit tests and a production build on GitHub, in about 25 seconds. A broken change shows a red X that names the failing step before anyone merges, instead of failing on a teammate's laptop or in a Vercel deploy. We proved this on a real test PR, which went green, then red on a deliberate error, then green after the fix, and a newer push cancelled the outdated run. A prompt pack helps reviewers spot auth, database and secret risks, but AI output is advice only. Approving and merging, handling secrets and judging the product stay with people. Branch protection is now on (2026-11-03), so a red check blocks normal merging. After that, the next topic should add ESLint, more tests and a matching Node version everywhere.
 
 ---
 
 ## Topic 2: AI review overlay on the finished CI gate
 
-Topic 1 stays: `.github/workflows/pr-ci.yml` is done. Topic 2 adds human review on top. Branch protection is now on.
+Topic 1 stays: `.github/workflows/pr-ci.yml` is done. Topic 2 adds human review on top. Branch protection is now on (see section 4).
 
 **AI can:** suggest findings in the required shape (advisor only). **AI cannot:** approve, merge, replace a human decision, or be a required reviewer or check. Green CI isn't permission to merge.
 
